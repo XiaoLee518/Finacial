@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>記帳</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Mono:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–bg:        #080808;
+–bg2:       #111111;
+–surface:   rgba(255,255,255,0.05);
+–surface2:  rgba(255,255,255,0.09);
+–border:    rgba(255,255,255,0.09);
+–border2:   rgba(255,255,255,0.16);
+–text:      #ffffff;
+–text2:     rgba(255,255,255,0.5);
+–text3:     rgba(255,255,255,0.25);
+–accent:    #ffffff;
+–negative:  rgba(255,255,255,0.15);
+–glass-blur: blur(32px) saturate(140%);
+–r:         20px;
+–r-sm:      12px;
+}
+
+html { background: var(–bg); }
+
+body {
+font-family: ‘DM Sans’, -apple-system, sans-serif;
+background: var(–bg);
+color: var(–text);
+min-height: 100vh;
+padding-bottom: 120px;
+-webkit-font-smoothing: antialiased;
+}
+
+/* ── NOISE OVERLAY */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 0;
+opacity: 0.6;
+}
+
+/* ── AMBIENT GLOW */
+.glow-tl, .glow-br {
+position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+}
+.glow-tl {
+width: 600px; height: 600px; top: -250px; left: -200px;
+background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 65%);
+}
+.glow-br {
+width: 500px; height: 500px; bottom: -200px; right: -150px;
+background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 65%);
+}
+
+/* ── LAYOUT */
+.app { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 0 20px; }
+
+/* ── HEADER */
+.header { padding: 64px 0 0; }
+.header-label { font-size: 10px; letter-spacing: 3px; color: var(–text3); text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+.header-title { font-size: 32px; font-weight: 300; letter-spacing: -1px; line-height: 1; }
+.header-title strong { font-weight: 700; }
+
+/* ── GLASS CARD */
+.card {
+background: var(–surface);
+backdrop-filter: var(–glass-blur);
+-webkit-backdrop-filter: var(–glass-blur);
+border: 1px solid var(–border);
+border-radius: var(–r);
+box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.card-strong {
+background: var(–surface2);
+backdrop-filter: var(–glass-blur);
+-webkit-backdrop-filter: var(–glass-blur);
+border: 1px solid var(–border2);
+border-radius: var(–r);
+box-shadow: 0 12px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+/* ── BALANCE SECTION */
+.balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+
+.balance-card {
+padding: 26px 22px;
+position: relative;
+overflow: hidden;
+border-radius: var(–r);
+}
+.balance-card::after {
+content: ‘’;
+position: absolute;
+top: -40px; right: -40px;
+width: 120px; height: 120px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+}
+.balance-label {
+font-size: 10px; letter-spacing: 2.5px; color: var(–text3);
+text-transform: uppercase; font-weight: 600; margin-bottom: 18px;
+}
+.balance-symbol { font-size: 11px; color: var(–text3); font-family: ‘DM Mono’, monospace; margin-right: 2px; }
+.balance-amount {
+font-size: 28px; font-weight: 700; letter-spacing: -1.5px; line-height: 1;
+font-variant-numeric: tabular-nums; font-family: ‘DM Mono’, monospace;
+}
+.balance-amount.negative { color: rgba(255,255,255,0.35); }
+.balance-sub { font-size: 10px; color: var(–text3); margin-top: 8px; font-family: ‘DM Mono’, monospace; letter-spacing: 0.3px; }
+.overspend-badge {
+position: absolute; bottom: 12px; right: 14px;
+font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.15);
+border-radius: 4px; padding: 2px 7px; font-weight: 600;
+}
+
+/* ── SUMMARY BAR */
+.summary-bar {
+display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr;
+align-items: center;
+padding: 18px 20px;
+margin-top: 12px;
+}
+.summary-item { text-align: center; }
+.summary-value { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; font-family: ‘DM Mono’, monospace; }
+.summary-label { font-size: 9px; color: var(–text3); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; font-weight: 500; }
+.summary-divider { background: var(–border); height: 28px; }
+
+/* ── TAB BAR */
+.tabs { display: flex; gap: 4px; padding: 4px; margin-top: 16px; }
+.tab-btn {
+flex: 1; padding: 10px; border: none; cursor: pointer;
+border-radius: var(–r-sm); font-family: ‘DM Sans’, sans-serif;
+font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+transition: all 0.22s; background: transparent; color: var(–text3);
+}
+.tab-btn.active {
+background: rgba(255,255,255,0.1);
+color: var(–text);
+box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* ── LIST */
+.list-section { margin-top: 18px; }
+.date-group { margin-bottom: 22px; }
+.date-label {
+font-size: 9px; color: var(–text3); letter-spacing: 3px; text-transform: uppercase;
+font-weight: 600; margin-bottom: 10px; padding-left: 2px;
+}
+.expense-list { overflow: hidden; border-radius: var(–r); }
+.expense-row {
+display: flex; align-items: center; padding: 14px 16px;
+border-bottom: 1px solid rgba(255,255,255,0.04);
+transition: background 0.15s;
+}
+.expense-row:last-child { border-bottom: none; }
+.expense-row:active { background: rgba(255,255,255,0.03); }
+
+.cat-icon {
+width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; letter-spacing: 1px; font-weight: 600; color: var(–text3);
+background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+text-transform: uppercase;
+}
+.expense-info { flex: 1; margin-left: 12px; min-width: 0; }
+.expense-desc { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.88); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.expense-cat { font-size: 10px; color: var(–text3); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; font-weight: 500; }
+.expense-amount { text-align: right; flex-shrink: 0; }
+.expense-main { font-size: 15px; font-weight: 600; font-family: ‘DM Mono’, monospace; letter-spacing: -0.3px; }
+.expense-conv { font-size: 10px; color: var(–text3); margin-top: 3px; font-family: ‘DM Mono’, monospace; }
+
+/* ── EMPTY STATE */
+.empty {
+text-align: center; padding: 60px 20px;
+border-radius: var(–r);
+}
+.empty-icon {
+width: 52px; height: 52px; border: 1px solid var(–border2);
+border-radius: 14px; margin: 0 auto 18px;
+display: flex; align-items: center; justify-content: center;
+font-size: 10px; letter-spacing: 2px; color: var(–text3); font-weight: 600;
+}
+.empty-title { color: var(–text3); font-size: 13px; letter-spacing: 0.5px; }
+.empty-sub { color: rgba(255,255,255,0.12); font-size: 11px; margin-top: 6px; letter-spacing: 0.3px; }
+
+/* ── CHARTS */
+.chart-section { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
+.chart-card { padding: 24px 20px; }
+.chart-label {
+font-size: 9px; color: var(–text3); letter-spacing: 3px; text-transform: uppercase;
+font-weight: 600; margin-bottom: 20px;
+}
+.chart-wrap { position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.legend-item {
+display: flex; align-items: center; gap: 6px;
+background: rgba(255,255,255,0.04); border: 1px solid var(–border);
+border-radius: 20px; padding: 5px 11px;
+}
+.legend-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.legend-name { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 0.8px; }
+.legend-val { font-size: 10px; color: var(–text3); font-family: ‘DM Mono’, monospace; }
+
+/* ── FAB */
+.fab-group {
+position: fixed; bottom: 36px; right: 24px;
+display: flex; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 50;
+}
+.fab {
+display: flex; align-items: center; gap: 8px;
+border: 1px solid var(–border2); cursor: pointer; font-family: ‘DM Sans’, sans-serif;
+backdrop-filter: var(–glass-blur); -webkit-backdrop-filter: var(–glass-blur);
+border-radius: 50px; font-weight: 600; letter-spacing: 1px; font-size: 12px;
+text-transform: uppercase; transition: all 0.18s; color: var(–text);
+box-shadow: 0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.fab-sm {
+padding: 10px 18px; background: rgba(255,255,255,0.07);
+color: rgba(255,255,255,0.6); font-size: 11px;
+}
+.fab-lg {
+padding: 14px 26px; background: rgba(255,255,255,0.12);
+font-size: 13px;
+}
+.fab:hover { transform: translateY(-1px); box-shadow: 0 12px 36px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2); }
+.fab:active { transform: translateY(0); }
+
+/* ── MODAL */
+.overlay {
+position: fixed; inset: 0; z-index: 100;
+background: rgba(0,0,0,0.6);
+backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet {
+background: rgba(14,14,14,0.92);
+backdrop-filter: blur(40px) saturate(160%);
+-webkit-backdrop-filter: blur(40px) saturate(160%);
+border: 1px solid var(–border2);
+border-radius: 24px 24px 0 0;
+padding: 28px 24px 48px;
+width: 100%; max-width: 520px;
+box-shadow: 0 -8px 48px rgba(0,0,0,0.6);
+animation: slideUp 0.3s cubic-bezier(0.32,1,0.6,1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.sheet-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; margin: 0 auto 26px; }
+.sheet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.sheet-title { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+.sheet-sub { font-size: 11px; color: var(–text3); margin-top: 4px; letter-spacing: 0.5px; }
+.close-btn {
+width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.07);
+border: 1px solid var(–border); color: var(–text3); cursor: pointer;
+font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+font-family: inherit; transition: all 0.15s;
+}
+.close-btn:hover { background: rgba(255,255,255,0.12); color: var(–text); }
+
+/* ── FORM */
+.cur-toggle { display: flex; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(–border); border-radius: 14px; padding: 4px; }
+.cur-btn {
+flex: 1; padding: 9px; border: none; cursor: pointer; border-radius: 10px;
+font-family: ‘DM Sans’, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 1px;
+text-transform: uppercase; transition: all 0.2s; background: transparent;
+color: var(–text3);
+}
+.cur-btn.active {
+background: rgba(255,255,255,0.1); color: var(–text);
+box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.field { margin-top: 10px; position: relative; }
+.field input {
+width: 100%; padding: 12px 16px;
+background: rgba(255,255,255,0.06); border: 1px solid var(–border);
+border-radius: var(–r-sm); font-family: ‘DM Sans’, sans-serif;
+font-size: 15px; color: var(–text); outline: none;
+transition: border-color 0.2s; letter-spacing: 0.2px;
+}
+.field input:focus { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.08); }
+.field input::placeholder { color: var(–text3); }
+.field input[type=“date”] { color-scheme: dark; }
+.cat-hint {
+position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+font-size: 9px; color: var(–text3); letter-spacing: 2px; text-transform: uppercase;
+font-weight: 600; pointer-events: none;
+}
+.confirm-btn {
+margin-top: 18px; width: 100%; padding: 15px;
+background: rgba(255,255,255,0.1);
+border: 1px solid var(–border2); border-radius: 14px;
+font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 600;
+letter-spacing: 1.5px; text-transform: uppercase; color: var(–text); cursor: pointer;
+backdrop-filter: var(–glass-blur);
+box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 4px 16px rgba(0,0,0,0.3);
+transition: all 0.18s;
+}
+.confirm-btn:hover { background: rgba(255,255,255,0.15); }
+.confirm-btn:active { transform: scale(0.99); }
+
+/* ── DANGER */
+.confirm-btn.danger { background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.25); color: rgba(255,110,110,0.9); }
+.confirm-btn.danger:hover { background: rgba(255,60,60,0.14); }
+.confirm-btn.ghost { background: transparent; border-color: var(–border); color: var(–text3); }
+.confirm-btn.ghost:hover { background: rgba(255,255,255,0.05); color: var(–text2); }
+.clear-stats { background: rgba(255,255,255,0.04); border: 1px solid var(–border); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
+.clear-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+.clear-stat-row + .clear-stat-row { border-top: 1px solid rgba(255,255,255,0.05); }
+.clear-stat-label { font-size: 11px; color: var(–text3); letter-spacing: 1px; text-transform: uppercase; }
+.clear-stat-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); font-family: “DM Mono”, monospace; }
+.step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.step-dot { width: 6px; height: 6px; border-radius: 50%; background: var(–border2); transition: background 0.2s; }
+.step-dot.active { background: rgba(255,100,100,0.8); }
+.step-dot.done { background: rgba(255,255,255,0.2); }
+.warning-box { background: rgba(255,60,60,0.06); border: 1px solid rgba(255,60,60,0.18); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; font-size: 12px; color: rgba(255,150,150,0.8); letter-spacing: 0.4px; line-height: 1.6; }
+.confirm-input { font-family: “DM Mono”, monospace !important; letter-spacing: 2px !important; text-align: center !important; font-size: 16px !important; font-weight: 500 !important; }
+.fab-danger { padding: 10px 18px; background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.18); color: rgba(255,100,100,0.65); font-size: 11px; }
+/* ── SETTINGS */
+.settings-section { margin-bottom: 28px; }
+.settings-section-label { font-size: 9px; color: var(–text3); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin: 0 0 10px 2px; }
+.settings-group { border-radius: var(–r); overflow: hidden; }
+.settings-row { display: flex; align-items: center; gap: 14px; padding: 15px 16px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.settings-row:last-child { border-bottom: none; }
+.settings-row:active { background: rgba(255,255,255,0.04); }
+.settings-row-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; color: rgba(255,255,255,0.5); flex-shrink: 0; font-family: “DM Mono”, monospace; font-weight: 500; }
+.danger-icon { background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.18); color: rgba(255,100,100,0.6); }
+.settings-row-body { flex: 1; min-width: 0; }
+.settings-row-title { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); }
+.danger-title { color: rgba(255,100,100,0.85); }
+.settings-row-sub { font-size: 11px; color: var(–text3); margin-top: 2px; letter-spacing: 0.3px; }
+.settings-row-arrow { font-size: 18px; color: var(–text3); line-height: 1; }
+.settings-info-card { border-radius: var(–r); padding: 16px 18px; }
+.settings-info-text { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 14px; }
+.settings-info-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+.settings-info-row span:first-child { color: var(–text3); letter-spacing: 0.5px; }
+.settings-info-row span:last-child { color: rgba(255,255,255,0.5); font-family: “DM Mono”, monospace; font-size: 11px; }
+.toast { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(30,30,30,0.95); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); padding: 10px 22px; border-radius: 50px; font-size: 13px; letter-spacing: 0.5px; backdrop-filter: blur(20px); opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 200; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.fab-danger:hover { background: rgba(255,60,60,0.14) !important; }
+/* ── DAILY CARDS */
+.daily-cards { display: flex; flex-direction: column; gap: 10px; }
+.daily-card { border-radius: var(–r); overflow: hidden; }
+.daily-card-header {
+display: flex; align-items: center; justify-content: space-between;
+padding: 14px 16px 10px;
+}
+.daily-card-date { font-size: 11px; color: var(–text3); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+.daily-card-total { font-size: 17px; font-weight: 700; font-family: ‘DM Mono’, monospace; letter-spacing: -0.5px; color: rgba(255,255,255,0.88); }
+.daily-card-meta { display: flex; gap: 10px; padding: 0 16px 12px; }
+.daily-meta-pill {
+font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+border-radius: 20px; padding: 4px 10px; color: rgba(255,255,255,0.35); font-weight: 500;
+}
+.daily-bar-track { height: 2px; background: rgba(255,255,255,0.06); margin: 0 16px 4px; border-radius: 2px; }
+.daily-bar-fill { height: 2px; border-radius: 2px; background: rgba(255,255,255,0.3); transition: width 0.4s ease; }
+.daily-rows { border-top: 1px solid rgba(255,255,255,0.05); }
+.daily-row {
+display: flex; align-items: center; padding: 9px 16px;
+border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
+}
+.daily-row:last-child { border-bottom: none; }
+.daily-row-cat { font-size: 10px; color: var(–text3); letter-spacing: 1.5px; text-transform: uppercase; width: 44px; flex-shrink: 0; font-weight: 500; }
+.daily-row-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+.daily-row-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+.daily-row-amt { font-size: 11px; font-family: ‘DM Mono’, monospace; color: rgba(255,255,255,0.4); width: 60px; text-align: right; flex-shrink: 0; }
+
+/* ── SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ── ANIMATIONS */
+@keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.4s ease both; }
+</style>
+
+</head>
+<body>
+<div class="glow-tl"></div>
+<div class="glow-br"></div>
+
+<div class="app">
+
+  <!-- HEADER -->
+
+  <div class="header fade-in">
+    <p class="header-label">旅遊記帳</p>
+    <h1 class="header-title">資產 <strong>總覽</strong></h1>
+  </div>
+
+  <!-- BALANCE CARDS -->
+
+  <div class="balance-grid fade-in" style="animation-delay:.08s">
+    <div class="balance-card card-strong" id="twd-card">
+      <p class="balance-label">新台幣</p>
+      <div>
+        <span class="balance-symbol">NT$</span>
+        <span class="balance-amount" id="twd-amount">0</span>
+      </div>
+      <p class="balance-sub" id="twd-sub">≈ ¥0</p>
+    </div>
+    <div class="balance-card card-strong" id="jpy-card">
+      <p class="balance-label">日圓</p>
+      <div>
+        <span class="balance-symbol">¥</span>
+        <span class="balance-amount" id="jpy-amount">0</span>
+      </div>
+      <p class="balance-sub" id="jpy-sub">≈ NT$0</p>
+    </div>
+  </div>
+
+  <!-- SUMMARY BAR -->
+
+  <div class="summary-bar card fade-in" style="animation-delay:.14s">
+    <div class="summary-item">
+      <div class="summary-value" id="sum-spent">NT$0</div>
+      <div class="summary-label">累計支出</div>
+    </div>
+    <div class="summary-divider"></div>
+    <div class="summary-item">
+      <div class="summary-value" id="sum-count">0</div>
+      <div class="summary-label">消費筆數</div>
+    </div>
+    <div class="summary-divider"></div>
+    <div class="summary-item">
+      <div class="summary-value" id="sum-cats">0</div>
+      <div class="summary-label">類別數</div>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+
+  <div class="tabs card fade-in" style="animation-delay:.18s">
+    <button class="tab-btn active" id="tab-list" onclick="switchTab('list')">明細</button>
+    <button class="tab-btn" id="tab-chart" onclick="switchTab('chart')">圖表</button>
+    <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')">設定</button>
+  </div>
+
+  <!-- LIST -->
+
+  <div id="view-list" class="list-section">
+    <div id="expense-list-wrap"></div>
+  </div>
+
+  <!-- CHARTS -->
+
+  <div id="view-chart" class="chart-section" style="display:none">
+    <div class="chart-card card">
+      <p class="chart-label">消費分類佔比</p>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="pie-chart"></canvas>
+      </div>
+      <div class="legend" id="pie-legend"></div>
+    </div>
+    <div class="chart-card card">
+      <p class="chart-label">各類別金額（新台幣）</p>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="bar-chart"></canvas>
+      </div>
+    </div>
+    <!-- DAILY ANALYSIS -->
+    <div class="chart-card card" style="padding-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px">
+        <p class="chart-label" style="margin:0">每日消費趨勢</p>
+        <span id="daily-avg-label" style="font-size:11px;color:rgba(255,255,255,0.3);font-family:'DM Mono',monospace"></span>
+      </div>
+      <div class="chart-wrap" style="height:180px">
+        <canvas id="daily-chart"></canvas>
+      </div>
+    </div>
+    <div id="daily-cards-wrap"></div>
+  </div>
+
+  <!-- SETTINGS -->
+
+  <div id="view-settings" style="display:none;padding:18px 0 0">
+    <div class="settings-section">
+      <p class="settings-section-label">資料備份</p>
+      <div class="settings-group card">
+        <div class="settings-row" onclick="exportData()">
+          <div class="settings-row-icon">↑</div>
+          <div class="settings-row-body">
+            <div class="settings-row-title">匯出資料</div>
+            <div class="settings-row-sub">下載 JSON 備份檔案</div>
+          </div>
+          <div class="settings-row-arrow">›</div>
+        </div>
+        <div class="settings-row" onclick="document.getElementById('import-file').click()">
+          <div class="settings-row-icon">↓</div>
+          <div class="settings-row-body">
+            <div class="settings-row-title">匯入資料</div>
+            <div class="settings-row-sub">從 JSON 備份還原記帳</div>
+          </div>
+          <div class="settings-row-arrow">›</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <p class="settings-section-label">關於資料儲存</p>
+      <div class="settings-info-card card">
+        <p class="settings-info-text">資料儲存於此裝置的瀏覽器（localStorage）。換裝置或清除快取時資料不會自動轉移，建議定期使用「匯出資料」備份。</p>
+        <div class="settings-info-row"><span>版本</span><span id="settings-ver">v1.0</span></div>
+        <div class="settings-info-row"><span>儲存狀態</span><span id="settings-storage-status">—</span></div>
+        <div class="settings-info-row"><span>上次更新</span><span id="settings-last-update">—</span></div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <p class="settings-section-label">危險操作</p>
+      <div class="settings-group card">
+        <div class="settings-row settings-danger-row" onclick="openClear()">
+          <div class="settings-row-icon danger-icon">✕</div>
+          <div class="settings-row-body">
+            <div class="settings-row-title danger-title">清除本次記帳</div>
+            <div class="settings-row-sub">刪除所有餘額與消費記錄</div>
+          </div>
+          <div class="settings-row-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+
+</div>
+
+<!-- FAB -->
+
+<div class="fab-group" id="main-fab">
+  <button class="fab fab-sm" onclick="openModal('balance')">儲值</button>
+  <button class="fab fab-lg" onclick="openModal('expense')">記一筆</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- MODAL: CLEAR -->
+
+<div class="overlay" id="modal-clear" style="display:none" onclick="bgClose(event,'modal-clear')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title" id="clear-title">清除本次記帳</div>
+        <div class="sheet-sub" id="clear-sub">此操作無法還原</div>
+      </div>
+      <button class="close-btn" onclick="closeModal('modal-clear')">✕</button>
+    </div>
+    <div class="step-indicator">
+      <div class="step-dot active" id="sdot-1"></div>
+      <div class="step-dot" id="sdot-2"></div>
+    </div>
+    <div id="clear-step-1">
+      <div class="clear-stats" id="clear-stats-preview"></div>
+      <div class="warning-box">清除後所有餘額與消費記錄將永久刪除，無法復原。請確認後繼續。</div>
+      <button class="confirm-btn danger" onclick="clearStep2()">我了解，繼續</button>
+      <button class="confirm-btn ghost" style="margin-top:8px" onclick="closeModal('modal-clear')">取消</button>
+    </div>
+    <div id="clear-step-2" style="display:none">
+      <div class="warning-box" id="clear-step2-hint">請在下方輸入 <strong style="color:rgba(255,200,200,0.9);letter-spacing:2px">DELETE</strong> 以確認清除</div>
+      <div class="field">
+        <input type="text" id="clear-confirm-input" class="confirm-input" placeholder="DELETE" autocomplete="off" autocorrect="off" autocapitalize="none" oninput="clearInputCheck()">
+      </div>
+      <button class="confirm-btn danger" id="clear-final-btn" style="margin-top:12px;opacity:0.3;pointer-events:none" onclick="clearAll()">確認清除全部資料</button>
+      <button class="confirm-btn ghost" style="margin-top:8px" onclick="closeModal('modal-clear')">取消</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL: BALANCE -->
+<div class="overlay" id="modal-balance" style="display:none" onclick="bgClose(event,'modal-balance')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">新增餘額</div>
+        <div class="sheet-sub">輸入起始或追加金額</div>
+      </div>
+      <button class="close-btn" onclick="closeModal('modal-balance')">✕</button>
+    </div>
+    <div class="cur-toggle">
+      <button class="cur-btn active" id="bal-twd" onclick="setCur('bal','TWD')">新台幣 NT$</button>
+      <button class="cur-btn" id="bal-jpy" onclick="setCur('bal','JPY')">日圓 ¥</button>
+    </div>
+    <div class="field">
+      <input type="number" id="bal-amt" placeholder="輸入金額" inputmode="decimal">
+    </div>
+    <button class="confirm-btn" onclick="addBalance()">確認儲值</button>
+  </div>
+</div>
+
+<!-- MODAL: EXPENSE -->
+
+<div class="overlay" id="modal-expense" style="display:none" onclick="bgClose(event,'modal-expense')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">新增消費</div>
+        <div class="sheet-sub">描述關鍵字即可自動分類</div>
+      </div>
+      <button class="close-btn" onclick="closeModal('modal-expense')">✕</button>
+    </div>
+    <div class="cur-toggle">
+      <button class="cur-btn active" id="exp-twd" onclick="setCur('exp','TWD')">新台幣 NT$</button>
+      <button class="cur-btn" id="exp-jpy" onclick="setCur('exp','JPY')">日圓 ¥</button>
+    </div>
+    <div class="field">
+      <input type="number" id="exp-amt" placeholder="金額" inputmode="decimal">
+    </div>
+    <div class="field">
+      <input type="text" id="exp-desc" placeholder="消費描述" oninput="updateCatHint()" autocomplete="off">
+      <span class="cat-hint" id="cat-hint"></span>
+    </div>
+    <div class="field">
+      <input type="date" id="exp-date">
+    </div>
+    <button class="confirm-btn" onclick="addExpense()">確認記帳</button>
+  </div>
+</div>
+
+<script>
+/* ── DATA ── */
+const TWD_JPY = 4.52;
+const CATS = {
+  '餐飲':  ['餐','食','飯','麵','咖啡','cafe','food','eat','drink','飲','茶','壽司','拉麵','便當','小吃','burger','pizza','sushi','restaurant','吃'],
+  '交通':  ['mrt','捷運','taxi','uber','bus','公車','電車','新幹線','地鐵','metro','train','jr','交通','票','suica','ic'],
+  '購物':  ['買','購','shop','store','百貨','超市','7-11','全家','超商','mall','market','藥妝','唐吉'],
+  '觀光':  ['神社','寺','城','博物館','museum','park','公園','景點','門票','ticket','入場','迪士尼'],
+  '住宿':  ['飯店','hotel','旅館','hostel','airbnb','住宿','inn'],
+  '娛樂':  ['電影','movie','game','遊戲','ktv','bar','酒','娛樂','live'],
+  '醫療':  ['藥','醫院','診所','medical','pharmacy'],
+  '其他':  [],
+};
+const CAT_GRAY = [
+  'rgba(255,255,255,0.85)',
+  'rgba(255,255,255,0.70)',
+  'rgba(255,255,255,0.56)',
+  'rgba(255,255,255,0.44)',
+  'rgba(255,255,255,0.34)',
+  'rgba(255,255,255,0.26)',
+  'rgba(255,255,255,0.18)',
+  'rgba(255,255,255,0.12)',
+];
+const CAT_ABBR = { '餐飲':'F&B','交通':'TRN','購物':'SHP','觀光':'SIT','住宿':'HTL','娛樂':'ENT','醫療':'MED','其他':'ETC' };
+
+let state = { twd:0, jpy:0, expenses:[] };
+let balCur = 'TWD', expCur = 'TWD';
+let pieChart = null, barChart = null;
+
+/* ── PERSIST ── */
+function save() { try { localStorage.setItem('kakeibo_v1', JSON.stringify(state)); } catch(e){} }
+function load() {
+  try {
+    const d = localStorage.getItem('kakeibo_v1');
+    if (d) state = JSON.parse(d);
+  } catch(e){}
+}
+
+/* ── UTILS ── */
+function fmt(n) { return Math.abs(n).toLocaleString('en-US'); }
+function autocat(desc) {
+  const d = desc.toLowerCase();
+  for (const [cat, kws] of Object.entries(CATS)) {
+    if (cat==='其他') continue;
+    if (kws.some(k => d.includes(k))) return cat;
+  }
+  return '其他';
+}
+function fmtDate(s) {
+  const d = new Date(s + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.round((today - d) / 86400000);
+  if (diff===0) return '今天';
+  if (diff===1) return '昨天';
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+function catColor(cat) {
+  const cats = Object.keys(CATS);
+  return CAT_GRAY[cats.indexOf(cat)] ?? CAT_GRAY[7];
+}
+
+/* ── RENDER ── */
+function render() {
+  // balances
+  const twdEl = document.getElementById('twd-amount');
+  const jpyEl = document.getElementById('jpy-amount');
+  twdEl.textContent = fmt(state.twd);
+  jpyEl.textContent = fmt(state.jpy);
+  twdEl.className = 'balance-amount' + (state.twd < 0 ? ' negative' : '');
+  jpyEl.className = 'balance-amount' + (state.jpy < 0 ? ' negative' : '');
+  document.getElementById('twd-sub').textContent = `≈ ¥${fmt(Math.round(state.twd * TWD_JPY))}`;
+  document.getElementById('jpy-sub').textContent = `≈ NT$${fmt(Math.round(state.jpy / TWD_JPY))}`;
+
+  // overspend badges
+  ['twd-card','jpy-card'].forEach(id => {
+    const el = document.getElementById(id);
+    const existing = el.querySelector('.overspend-badge');
+    if (existing) existing.remove();
+    const bal = id==='twd-card' ? state.twd : state.jpy;
+    if (bal < 0) {
+      const b = document.createElement('div');
+      b.className = 'overspend-badge';
+      b.textContent = '超支';
+      el.appendChild(b);
+    }
+  });
+
+  // summary
+  const totalTwd = state.expenses.reduce((s,e) => s + (e.cur==='TWD' ? e.amt : e.amt/TWD_JPY), 0);
+  const catSet = new Set(state.expenses.map(e => e.cat));
+  document.getElementById('sum-spent').textContent = 'NT$' + fmt(Math.round(totalTwd));
+  document.getElementById('sum-count').textContent = state.expenses.length;
+  document.getElementById('sum-cats').textContent = catSet.size;
+
+  renderList();
+  renderCharts();
+}
+
+function renderList() {
+  const wrap = document.getElementById('expense-list-wrap');
+  if (state.expenses.length === 0) {
+    wrap.innerHTML = `<div class="empty card">
+      <div class="empty-icon">◌</div>
+      <p class="empty-title">尚無消費記錄</p>
+      <p class="empty-sub">點擊右下角「記一筆」開始</p>
+    </div>`;
+    return;
+  }
+
+  const byDate = {};
+  state.expenses.forEach(e => { (byDate[e.date] = byDate[e.date]||[]).push(e); });
+  const sorted = Object.entries(byDate).sort(([a],[b]) => b.localeCompare(a));
+
+  wrap.innerHTML = sorted.map(([date, items]) => `
+    <div class="date-group">
+      <p class="date-label">${fmtDate(date)}</p>
+      <div class="expense-list card">
+        ${items.map(e => `
+          <div class="expense-row">
+            <div class="cat-icon">${CAT_ABBR[e.cat]||'ETC'}</div>
+            <div class="expense-info">
+              <div class="expense-desc">${escHtml(e.desc)}</div>
+              <div class="expense-cat">${e.cat}</div>
+            </div>
+            <div class="expense-amount">
+              <div class="expense-main">${e.cur==='TWD'?'NT$':'¥'}${fmt(e.amt)}</div>
+              <div class="expense-conv">${e.cur==='TWD'?`≈¥${fmt(Math.round(e.amt*TWD_JPY))}`:` ≈NT$${fmt(Math.round(e.amt/TWD_JPY))}`}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCharts() {
+  if (document.getElementById('view-chart').style.display === 'none') return;
+
+  const totals = {};
+  state.expenses.forEach(e => {
+    const v = e.cur==='TWD' ? e.amt : e.amt/TWD_JPY;
+    totals[e.cat] = (totals[e.cat]||0) + v;
+  });
+  const data = Object.entries(totals).map(([name,value]) => ({name, value: Math.round(value)}));
+  if (data.length === 0) return;
+
+  const labels = data.map(d => d.name);
+  const values = data.map(d => d.value);
+  const colors = data.map(d => catColor(d.name));
+
+  // Pie
+  const pieCtx = document.getElementById('pie-chart').getContext('2d');
+  if (pieChart) pieChart.destroy();
+  pieChart = new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data: values, backgroundColor: colors, borderColor: 'rgba(255,255,255,0.04)', borderWidth: 1 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10,10,10,0.9)',
+          borderColor: 'rgba(255,255,255,0.12)', borderWidth: 1,
+          titleColor: 'rgba(255,255,255,0.45)', titleFont: { size:10, family:'DM Sans' },
+          bodyColor: '#fff', bodyFont: { size:14, family:'DM Mono', weight:'600' },
+          padding: 12, callbacks: { label: ctx => ` NT$ ${ctx.parsed.toLocaleString()}` }
+        }
+      }
+    }
+  });
+
+  // Legend
+  document.getElementById('pie-legend').innerHTML = data.map((d,i) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${colors[i]}"></div>
+      <span class="legend-name">${d.name}</span>
+      <span class="legend-val">NT$${d.value.toLocaleString()}</span>
+    </div>
+  `).join('');
+
+  // Bar
+  const barCtx = document.getElementById('bar-chart').getContext('2d');
+  if (barChart) barChart.destroy();
+  barChart = new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ data: values, backgroundColor: colors, borderRadius: 5, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10,10,10,0.9)',
+          borderColor: 'rgba(255,255,255,0.12)', borderWidth: 1,
+          titleColor: 'rgba(255,255,255,0.45)', titleFont: { size:10, family:'DM Sans' },
+          bodyColor: '#fff', bodyFont: { size:14, family:'DM Mono', weight:'600' },
+          padding: 12, callbacks: { label: ctx => ` NT$ ${ctx.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color:'rgba(255,255,255,0.3)', font:{size:10, family:'DM Sans'} },
+          grid: { display:false }, border: { display:false }
+        },
+        y: {
+          ticks: {
+            color:'rgba(255,255,255,0.25)', font:{size:9, family:'DM Mono'},
+            callback: v => v>=1000 ? (v/1000).toFixed(0)+'k' : v
+          },
+          grid: { color:'rgba(255,255,255,0.04)', drawBorder:false },
+          border: { display:false }
+        }
+      }
+    }
+  });
+
+  renderDailyCharts();
+}
+
+/* ── DAILY CHART & CARDS ── */
+let dailyChart = null;
+
+function renderDailyCharts() {
+  // Build per-day data sorted ascending for line chart
+  const dayMap = {};
+  state.expenses.forEach(e => {
+    const v = e.cur==='TWD' ? e.amt : e.amt/TWD_JPY;
+    if (!dayMap[e.date]) dayMap[e.date] = { total: 0, cats: {}, count: 0 };
+    dayMap[e.date].total += v;
+    dayMap[e.date].cats[e.cat] = (dayMap[e.date].cats[e.cat]||0) + v;
+    dayMap[e.date].count++;
+  });
+
+  const sortedDays = Object.entries(dayMap).sort(([a],[b]) => a.localeCompare(b));
+  if (sortedDays.length === 0) return;
+
+  const maxDay = Math.max(...sortedDays.map(([,d]) => d.total));
+  const avgDay = sortedDays.reduce((s,[,d]) => s+d.total, 0) / sortedDays.length;
+
+  // Update avg label
+  const avgEl = document.getElementById('daily-avg-label');
+  if (avgEl) avgEl.textContent = '日均 NT$' + Math.round(avgDay).toLocaleString();
+
+  // Line chart
+  const lineCtx = document.getElementById('daily-chart').getContext('2d');
+  if (dailyChart) dailyChart.destroy();
+
+  const lineLabels = sortedDays.map(([date]) => {
+    const d = new Date(date + 'T00:00:00');
+    return (d.getMonth()+1) + '/' + d.getDate();
+  });
+  const lineValues = sortedDays.map(([,d]) => Math.round(d.total));
+
+  // Gradient fill
+  const grad = lineCtx.createLinearGradient(0, 0, 0, 180);
+  grad.addColorStop(0, 'rgba(255,255,255,0.14)');
+  grad.addColorStop(1, 'rgba(255,255,255,0.0)');
+
+  dailyChart = new Chart(lineCtx, {
+    type: 'line',
+    data: {
+      labels: lineLabels,
+      datasets: [{
+        data: lineValues,
+        borderColor: 'rgba(255,255,255,0.55)',
+        borderWidth: 1.5,
+        pointBackgroundColor: 'rgba(255,255,255,0.8)',
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        fill: true,
+        backgroundColor: grad,
+        tension: 0.35,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10,10,10,0.9)',
+          borderColor: 'rgba(255,255,255,0.12)', borderWidth: 1,
+          titleColor: 'rgba(255,255,255,0.45)', titleFont: { size:10, family:'DM Sans' },
+          bodyColor: '#fff', bodyFont: { size:14, family:'DM Mono', weight:'600' },
+          padding: 12,
+          callbacks: { label: ctx => ' NT$ ' + ctx.parsed.y.toLocaleString() }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color:'rgba(255,255,255,0.3)', font:{size:10, family:'DM Sans'}, maxRotation:0 },
+          grid: { display:false }, border: { display:false }
+        },
+        y: {
+          ticks: {
+            color:'rgba(255,255,255,0.25)', font:{size:9, family:'DM Mono'},
+            callback: v => v>=1000 ? (v/1000).toFixed(0)+'k' : v
+          },
+          grid: { color:'rgba(255,255,255,0.04)' },
+          border: { display:false }
+        }
+      }
+    }
+  });
+
+  // Day cards (descending: most recent first)
+  const wrap = document.getElementById('daily-cards-wrap');
+  const descDays = [...sortedDays].reverse();
+  wrap.innerHTML = '<div class="daily-cards">' + descDays.map(([date, d]) => {
+    const dayTotal = Math.round(d.total);
+    const pct = maxDay > 0 ? Math.round((d.total / maxDay) * 100) : 0;
+    const topCat = Object.entries(d.cats).sort(([,a],[,b]) => b-a)[0];
+    const catRows = Object.entries(d.cats)
+      .sort(([,a],[,b]) => b-a)
+      .map(([cat, val]) => {
+        const catPct = Math.round((val / d.total) * 100);
+        const col = catColor(cat);
+        return `<div class="daily-row">
+          <span class="daily-row-cat">${cat}</span>
+          <div class="daily-row-bar-wrap"><div class="daily-row-bar" style="width:${catPct}%;background:${col}"></div></div>
+          <span class="daily-row-amt">NT$${Math.round(val).toLocaleString()}</span>
+        </div>`;
+      }).join('');
+
+    const d2 = new Date(date + 'T00:00:00');
+    const dateLabel = fmtDate(date);
+    const fullDate = `${d2.getMonth()+1}月${d2.getDate()}日`;
+
+    return `<div class="daily-card card">
+      <div class="daily-card-header">
+        <div>
+          <div class="daily-card-date">${dateLabel === '今天' || dateLabel === '昨天' ? dateLabel + ' · ' + fullDate : fullDate}</div>
+        </div>
+        <div class="daily-card-total">NT$ ${dayTotal.toLocaleString()}</div>
+      </div>
+      <div class="daily-bar-track"><div class="daily-bar-fill" style="width:${pct}%"></div></div>
+      <div class="daily-card-meta">
+        <span class="daily-meta-pill">${d.count} 筆</span>
+        <span class="daily-meta-pill">最多 ${topCat ? topCat[0] : '—'}</span>
+      </div>
+      <div class="daily-rows">${catRows}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+/* ── LOCAL DATE ── */
+function localToday() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+/* ── MODAL ── */
+function openModal(name) {
+  if (name==='expense') {
+    document.getElementById('exp-date').value = localToday();
+    document.getElementById('cat-hint').textContent = '';
+    document.getElementById('exp-amt').value = '';
+    document.getElementById('exp-desc').value = '';
+  } else {
+    document.getElementById('bal-amt').value = '';
+  }
+  document.getElementById('modal-'+name).style.display = 'flex';
+  setTimeout(() => {
+    if (name==='expense') document.getElementById('exp-amt').focus();
+    else document.getElementById('bal-amt').focus();
+  }, 350);
+}
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function bgClose(e, id) { if (e.target.classList.contains('overlay')) closeModal(id); }
+
+/* ── CURRENCY TOGGLE ── */
+function setCur(form, cur) {
+  if (form==='bal') {
+    balCur = cur;
+    document.getElementById('bal-twd').className = 'cur-btn' + (cur==='TWD'?' active':'');
+    document.getElementById('bal-jpy').className = 'cur-btn' + (cur==='JPY'?' active':'');
+  } else {
+    expCur = cur;
+    document.getElementById('exp-twd').className = 'cur-btn' + (cur==='TWD'?' active':'');
+    document.getElementById('exp-jpy').className = 'cur-btn' + (cur==='JPY'?' active':'');
+    document.getElementById('cat-hint').textContent = '';
+  }
+}
+
+/* ── CAT HINT ── */
+function updateCatHint() {
+  const desc = document.getElementById('exp-desc').value;
+  document.getElementById('cat-hint').textContent = desc ? autocat(desc) : '';
+}
+
+/* ── ACTIONS ── */
+function addBalance() {
+  const n = parseFloat(document.getElementById('bal-amt').value);
+  if (isNaN(n) || n <= 0) return;
+  if (balCur==='TWD') state.twd += n; else state.jpy += n;
+  save(); render(); closeModal('modal-balance');
+}
+
+function addExpense() {
+  const n = parseFloat(document.getElementById('exp-amt').value);
+  const desc = document.getElementById('exp-desc').value.trim();
+  const date = document.getElementById('exp-date').value || localToday();
+  if (isNaN(n) || n <= 0) { alert('請輸入有效金額'); return; }
+  if (!desc) { alert('請輸入消費描述'); return; }
+  const cat = autocat(desc);
+  state.expenses.unshift({ id: Date.now(), amt: n, cur: expCur, desc, cat, date });
+  if (expCur==='TWD') state.twd -= n; else state.jpy -= n;
+  save(); render(); closeModal('modal-expense');
+}
+
+/* ── TAB ── */
+function switchTab(t) {
+  document.getElementById('view-list').style.display     = t==='list'     ? 'block' : 'none';
+  document.getElementById('view-chart').style.display    = t==='chart'    ? 'flex'  : 'none';
+  document.getElementById('view-settings').style.display = t==='settings' ? 'block' : 'none';
+  document.getElementById('tab-list').className     = 'tab-btn' + (t==='list'     ? ' active' : '');
+  document.getElementById('tab-chart').className    = 'tab-btn' + (t==='chart'    ? ' active' : '');
+  document.getElementById('tab-settings').className = 'tab-btn' + (t==='settings' ? ' active' : '');
+  // FAB: hide on settings tab
+  document.getElementById('main-fab').style.display = t==='settings' ? 'none' : 'flex';
+  if (t==='chart') renderCharts();
+  if (t==='settings') renderSettingsInfo();
+}
+
+/* ── HTML ESCAPE ── */
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+/* ── CLEAR ── */
+function openClear() {
+  // reset to step 1
+  document.getElementById("clear-step-1").style.display = "block";
+  document.getElementById("clear-step-2").style.display = "none";
+  document.getElementById("clear-confirm-input").value = "";
+  document.getElementById("clear-title").textContent = "清除本次記帳";
+  document.getElementById("clear-sub").textContent = "此操作無法還原";
+  document.getElementById("sdot-1").className = "step-dot active";
+  document.getElementById("sdot-2").className = "step-dot";
+  document.getElementById("clear-final-btn").style.opacity = "0.3";
+  document.getElementById("clear-final-btn").style.pointerEvents = "none";
+  // fill stats
+  const totalTwd = state.expenses.reduce((s,e) => s + (e.cur==="TWD" ? e.amt : e.amt/TWD_JPY), 0);
+  document.getElementById("clear-stats-preview").innerHTML = [
+    ["消費筆數", state.expenses.length + " 筆"],
+    ["累計支出", "NT$ " + Math.round(totalTwd).toLocaleString()],
+    ["新台幣餘額", "NT$ " + fmt(state.twd)],
+    ["日圓餘額", "¥ " + fmt(state.jpy)],
+  ].map(([l,v]) => `<div class="clear-stat-row"><span class="clear-stat-label">${l}</span><span class="clear-stat-value">${v}</span></div>`).join("");
+  document.getElementById("modal-clear").style.display = "flex";
+}
+
+function clearStep2() {
+  document.getElementById("clear-step-1").style.display = "none";
+  document.getElementById("clear-step-2").style.display = "block";
+  document.getElementById("clear-title").textContent = "最終確認";
+  document.getElementById("clear-sub").textContent = "輸入確認碼以完成清除";
+  document.getElementById("sdot-1").className = "step-dot done";
+  document.getElementById("sdot-2").className = "step-dot active";
+  setTimeout(() => document.getElementById("clear-confirm-input").focus(), 300);
+}
+
+function clearInputCheck() {
+  const val = document.getElementById("clear-confirm-input").value;
+  const btn = document.getElementById("clear-final-btn");
+  const match = val === "DELETE";
+  btn.style.opacity = match ? "1" : "0.3";
+  btn.style.pointerEvents = match ? "auto" : "none";
+}
+
+function clearAll() {
+  state = { twd: 0, jpy: 0, expenses: [] };
+  save(); render(); closeModal("modal-clear");
+}
+/* ── TOAST ── */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ── EXPORT ── */
+function exportData() {
+  const payload = { version: 1, exportedAt: new Date().toISOString(), data: state };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = localToday();
+  a.href = url; a.download = 'kakeibo-' + dateStr + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('已匯出備份檔案');
+}
+
+/* ── IMPORT ── */
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const parsed = JSON.parse(ev.target.result);
+      // Support both raw state and wrapped export format
+      const incoming = parsed.version && parsed.data ? parsed.data : parsed;
+      if (typeof incoming.twd !== 'number' || typeof incoming.jpy !== 'number' || !Array.isArray(incoming.expenses)) {
+        showToast('格式錯誤，無法匯入'); return;
+      }
+      state = incoming;
+      save(); render(); switchTab('list');
+      showToast('匯入成功，共 ' + state.expenses.length + ' 筆記錄');
+    } catch(err) {
+      showToast('檔案讀取失敗');
+    }
+    e.target.value = ''; // reset so same file can be re-imported
+  };
+  reader.readAsText(file);
+}
+
+/* ── SETTINGS INFO ── */
+function renderSettingsInfo() {
+  const size = (() => {
+    try { const s = localStorage.getItem('kakeibo_v1') || ''; return (s.length / 1024).toFixed(1) + ' KB'; } catch(e) { return '—'; }
+  })();
+  const last = state.expenses.length > 0
+    ? fmtDate(state.expenses[0].date)
+    : '無記錄';
+  const el = document.getElementById('settings-storage-status');
+  const el2 = document.getElementById('settings-last-update');
+  if (el) el.textContent = size;
+  if (el2) el2.textContent = last;
+}
+
+/* ── INIT ── */
+load();
+render();
+</script>
+
+</body>
+</html>
