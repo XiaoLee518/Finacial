@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -12,418 +11,1012 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Mono:wght@300;400;500&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-–bg:        #080808;
-–bg2:       #111111;
-–surface:   rgba(255,255,255,0.05);
-–surface2:  rgba(255,255,255,0.09);
-–border:    rgba(255,255,255,0.09);
-–border2:   rgba(255,255,255,0.16);
-–text:      #ffffff;
-–text2:     rgba(255,255,255,0.5);
-–text3:     rgba(255,255,255,0.25);
-–accent:    #ffffff;
-–negative:  rgba(255,255,255,0.15);
-–glass-blur: blur(24px) saturate(140%);
-–r:         20px;
-–r-sm:      12px;
-}
+  :root {
+    --bg:        #080808;
+    --bg2:       #111111;
+    --surface:   rgba(255,255,255,0.05);
+    --surface2:  rgba(255,255,255,0.09);
+    --border:    rgba(255,255,255,0.09);
+    --border2:   rgba(255,255,255,0.16);
+    --text:      #ffffff;
+    --text2:     rgba(255,255,255,0.5);
+    --text3:     rgba(255,255,255,0.25);
+    --accent:    #ffffff;
+    --negative:  rgba(255,255,255,0.15);
+    --glass-blur: blur(24px) saturate(140%);
+  }
 
-html {
-background: #080808;
-background-color: #080808;
-min-height: 100%;
--webkit-text-size-adjust: 100%;
-}
+  html {
+    background: #080808;
+    background-color: #080808;
+    min-height: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
 
-body {
-font-family: ‘DM Sans’, -apple-system, ‘Helvetica Neue’, sans-serif;
-background: #080808;
-background-color: #080808;
-color: #ffffff;
-min-height: 100vh;
-min-height: -webkit-fill-available;
-padding-bottom: 120px;
--webkit-font-smoothing: antialiased;
-}
+  body {
+    font-family: 'DM Sans', -apple-system, 'Helvetica Neue', sans-serif;
+    background: #080808;
+    background-color: #080808;
+    color: #ffffff;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding-bottom: 120px;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* iOS Safari button reset — prevents blue system color */
-button {
--webkit-appearance: none;
-appearance: none;
-color: inherit;
-cursor: pointer;
-}
+  /* iOS Safari button reset — prevents blue system color */
+  button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+  }
 
-/* ── NOISE OVERLAY */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
-pointer-events: none;
-z-index: 0;
-opacity: 0.6;
-}
+  /* ── NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
 
-/* ── AMBIENT GLOW */
-.glow-tl, .glow-br {
-position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-}
-.glow-tl {
-width: 600px; height: 600px; top: -250px; left: -200px;
-background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 65%);
-}
-.glow-br {
-width: 500px; height: 500px; bottom: -200px; right: -150px;
-background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 65%);
-}
+  /* ── AMBIENT GLOW */
+  .glow-tl, .glow-br {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  }
+  .glow-tl {
+    width: 600px; height: 600px; top: -250px; left: -200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 65%);
+  }
+  .glow-br {
+    width: 500px; height: 500px; bottom: -200px; right: -150px;
+    background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 65%);
+  }
 
-/* ── LAYOUT */
-.app { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 0 20px; }
+  /* ── LAYOUT */
+  .app { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 0 20px; }
 
-/* ── HEADER */
-.header { padding: 64px 0 0; }
-.header-label { font-size: 10px; letter-spacing: 3px; color: var(–text3); text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
-.header-title { font-size: 32px; font-weight: 300; letter-spacing: -1px; line-height: 1; }
-.header-title strong { font-weight: 700; }
+  /* ── HEADER */
+  .header { padding: 64px 0 0; }
+  .header-label { font-size: 10px; letter-spacing: 3px; color: var(--text3); text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+  .header-title { font-size: 32px; font-weight: 300; letter-spacing: -1px; line-height: 1; }
+  .header-title strong { font-weight: 700; }
 
-/* ── GLASS CARD */
-.card {
-background: rgba(255,255,255,0.07);
-background-color: rgba(28,28,30,0.85);
-backdrop-filter: var(–glass-blur);
--webkit-backdrop-filter: var(–glass-blur);
-border: 1px solid rgba(255,255,255,0.10);
-border-radius: var(–r);
-box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
-}
-.card-strong {
-background: rgba(255,255,255,0.09);
-background-color: rgba(38,38,40,0.9);
-backdrop-filter: var(–glass-blur);
--webkit-backdrop-filter: var(–glass-blur);
-border: 1px solid rgba(255,255,255,0.14);
-border-radius: var(–r);
-box-shadow: 0 12px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.14);
-}
+  /* ── GLASS CARD */
+  .card {
+    background: rgba(255,255,255,0.07);
+    background-color: rgba(28,28,30,0.85);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .card-strong {
+    background: rgba(255,255,255,0.09);
+    background-color: rgba(38,38,40,0.9);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 20px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.14);
+  }
 
-/* ── BALANCE SECTION */
-.balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+  /* ── BALANCE SECTION */
+  .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
 
-.balance-card {
-padding: 26px 22px;
-position: relative;
-overflow: hidden;
-border-radius: var(–r);
-}
-.balance-card::after {
-content: ‘’;
-position: absolute;
-top: -40px; right: -40px;
-width: 120px; height: 120px;
-border-radius: 50%;
-background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
-}
-.balance-label {
-font-size: 10px; letter-spacing: 2.5px; color: var(–text3);
-text-transform: uppercase; font-weight: 600; margin-bottom: 18px;
-}
-.balance-symbol { font-size: 11px; color: var(–text3); font-family: ‘DM Mono’, monospace; margin-right: 2px; }
-.balance-amount {
-font-size: 28px; font-weight: 700; letter-spacing: -1.5px; line-height: 1;
-font-variant-numeric: tabular-nums; font-family: ‘DM Mono’, monospace;
-}
-.balance-amount.negative { color: rgba(255,255,255,0.35); }
-.balance-sub { font-size: 10px; color: var(–text3); margin-top: 8px; font-family: ‘DM Mono’, monospace; letter-spacing: 0.3px; }
-.overspend-badge {
-position: absolute; bottom: 12px; right: 14px;
-font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.15);
-border-radius: 4px; padding: 2px 7px; font-weight: 600;
-}
+  .balance-card {
+    padding: 26px 22px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+  .balance-card::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+  }
+  .balance-label {
+    font-size: 10px; letter-spacing: 2.5px; color: var(--text3);
+    text-transform: uppercase; font-weight: 600; margin-bottom: 18px;
+  }
+  .balance-symbol { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-right: 2px; }
+  .balance-amount {
+    font-size: 28px; font-weight: 700; letter-spacing: -1.5px; line-height: 1;
+    font-variant-numeric: tabular-nums; font-family: 'DM Mono', monospace;
+  }
+  .balance-amount.negative { color: rgba(255,255,255,0.35); }
+  .balance-sub { font-size: 10px; color: var(--text3); margin-top: 8px; font-family: 'DM Mono', monospace; letter-spacing: 0.3px; }
+  .overspend-badge {
+    position: absolute; bottom: 12px; right: 14px;
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px; padding: 2px 7px; font-weight: 600;
+  }
 
-/* ── SUMMARY BAR */
-.summary-bar {
-display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr;
-align-items: center;
-padding: 18px 20px;
-margin-top: 12px;
-}
-.summary-item { text-align: center; }
-.summary-value { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; font-family: ‘DM Mono’, monospace; }
-.summary-label { font-size: 9px; color: var(–text3); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; font-weight: 500; }
-.summary-divider { background: var(–border); height: 28px; }
+  /* ── SUMMARY BAR */
+  .summary-bar {
+    display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    align-items: center;
+    padding: 18px 20px;
+    margin-top: 12px;
+  }
+  .summary-item { text-align: center; }
+  .summary-value { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; font-family: 'DM Mono', monospace; }
+  .summary-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; font-weight: 500; }
+  .summary-divider { background: var(--border); height: 28px; }
 
-/* ── TAB BAR */
-.tabs { display: flex; gap: 4px; padding: 4px; margin-top: 16px; }
-.tab-btn {
-flex: 1; padding: 10px; border: none; cursor: pointer;
--webkit-appearance: none; appearance: none;
-border-radius: var(–r-sm); font-family: ‘DM Sans’, -apple-system, sans-serif;
-font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
-transition: all 0.22s; background: transparent;
-color: rgba(255,255,255,0.3);
--webkit-tap-highlight-color: transparent;
-}
-.tab-btn.active {
-background: rgba(255,255,255,0.1);
-color: #ffffff;
-box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
-}
+  /* ── TAB BAR */
+  .tabs { display: flex; gap: 4px; padding: 4px; margin-top: 16px; }
+  .tab-btn {
+    flex: 1; padding: 10px; border: none; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    border-radius: 12px; font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: all 0.22s; background: transparent;
+    color: rgba(255,255,255,0.3);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-btn.active {
+    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
 
-/* ── LIST */
-.list-section { margin-top: 18px; }
-.date-group { margin-bottom: 22px; }
-.date-label {
-font-size: 9px; color: var(–text3); letter-spacing: 3px; text-transform: uppercase;
-font-weight: 600; margin-bottom: 10px; padding-left: 2px;
-}
-.expense-list { overflow: hidden; border-radius: var(–r); }
-.expense-row {
-display: flex; align-items: center; padding: 14px 16px;
-border-bottom: 1px solid rgba(255,255,255,0.04);
-transition: background 0.15s;
-}
-.expense-row:last-child { border-bottom: none; }
-.expense-row:active { background: rgba(255,255,255,0.03); }
+  /* ── LIST */
+  .list-section { margin-top: 18px; }
+  .date-group { margin-bottom: 22px; }
+  .date-label {
+    font-size: 9px; color: var(--text3); letter-spacing: 3px; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 10px; padding-left: 2px;
+  }
+  .expense-list { overflow: hidden; border-radius: 20px; }
+  .expense-row {
+    display: flex; align-items: center; padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  .expense-row:last-child { border-bottom: none; }
+  .expense-row:active { background: rgba(255,255,255,0.03); }
 
-.cat-icon {
-width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
-display: flex; align-items: center; justify-content: center;
-font-size: 11px; letter-spacing: 1px; font-weight: 600; color: var(–text3);
-background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
-text-transform: uppercase;
-}
-.expense-info { flex: 1; margin-left: 12px; min-width: 0; }
-.expense-desc { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.88); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.expense-cat { font-size: 10px; color: var(–text3); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; font-weight: 500; }
-.expense-amount { text-align: right; flex-shrink: 0; }
-.expense-main { font-size: 15px; font-weight: 600; font-family: ‘DM Mono’, monospace; letter-spacing: -0.3px; }
-.expense-conv { font-size: 10px; color: var(–text3); margin-top: 3px; font-family: ‘DM Mono’, monospace; }
+  .cat-icon {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; letter-spacing: 1px; font-weight: 600; color: var(--text3);
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    text-transform: uppercase;
+  }
+  .expense-info { flex: 1; margin-left: 12px; min-width: 0; }
+  .expense-desc { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.88); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .expense-cat { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; font-weight: 500; }
+  .expense-amount { text-align: right; flex-shrink: 0; }
+  .expense-main { font-size: 15px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: -0.3px; }
+  .expense-conv { font-size: 10px; color: var(--text3); margin-top: 3px; font-family: 'DM Mono', monospace; }
 
-/* ── EMPTY STATE */
-.empty {
-text-align: center; padding: 60px 20px;
-border-radius: var(–r);
-}
-.empty-icon {
-width: 52px; height: 52px; border: 1px solid var(–border2);
-border-radius: 14px; margin: 0 auto 18px;
-display: flex; align-items: center; justify-content: center;
-font-size: 10px; letter-spacing: 2px; color: var(–text3); font-weight: 600;
-}
-.empty-title { color: var(–text3); font-size: 13px; letter-spacing: 0.5px; }
-.empty-sub { color: rgba(255,255,255,0.12); font-size: 11px; margin-top: 6px; letter-spacing: 0.3px; }
+  /* ── EMPTY STATE */
+  .empty {
+    text-align: center; padding: 60px 20px;
+    border-radius: 20px;
+  }
+  .empty-icon {
+    width: 52px; height: 52px; border: 1px solid var(--border2);
+    border-radius: 14px; margin: 0 auto 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; letter-spacing: 2px; color: var(--text3); font-weight: 600;
+  }
+  .empty-title { color: var(--text3); font-size: 13px; letter-spacing: 0.5px; }
+  .empty-sub { color: rgba(255,255,255,0.12); font-size: 11px; margin-top: 6px; letter-spacing: 0.3px; }
 
-/* ── CHARTS */
-.chart-section { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
-.chart-card { padding: 24px 20px; }
-.chart-label {
-font-size: 9px; color: var(–text3); letter-spacing: 3px; text-transform: uppercase;
-font-weight: 600; margin-bottom: 20px;
-}
-.chart-wrap { position: relative; }
-.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.legend-item {
-display: flex; align-items: center; gap: 6px;
-background: rgba(255,255,255,0.04); border: 1px solid var(–border);
-border-radius: 20px; padding: 5px 11px;
-}
-.legend-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.legend-name { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 0.8px; }
-.legend-val { font-size: 10px; color: var(–text3); font-family: ‘DM Mono’, monospace; }
+  /* ── CHARTS */
+  .chart-section { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .chart-card { padding: 24px 20px; }
+  .chart-label {
+    font-size: 9px; color: var(--text3); letter-spacing: 3px; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 20px;
+  }
+  .chart-wrap { position: relative; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 11px;
+  }
+  .legend-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .legend-name { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 0.8px; }
+  .legend-val { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
 
-/* ── FAB */
-.fab-group {
-position: fixed; bottom: 36px; right: 24px;
-display: flex; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 50;
-}
-.fab {
-display: flex; align-items: center; gap: 8px;
-border: 1px solid rgba(255,255,255,0.18); cursor: pointer;
-font-family: ‘DM Sans’, -apple-system, sans-serif;
--webkit-appearance: none; appearance: none;
-backdrop-filter: var(–glass-blur); -webkit-backdrop-filter: var(–glass-blur);
-border-radius: 50px; font-weight: 600; letter-spacing: 1px; font-size: 12px;
-text-transform: uppercase; transition: all 0.18s; color: #ffffff;
-box-shadow: 0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
--webkit-tap-highlight-color: transparent;
-}
-.fab-sm {
-padding: 10px 18px;
-background: rgba(40,40,42,0.92);
-color: rgba(255,255,255,0.6); font-size: 11px;
-}
-.fab-lg {
-padding: 14px 26px;
-background: rgba(50,50,55,0.95);
-font-size: 13px; color: #ffffff;
-}
-.fab:hover { transform: translateY(-1px); box-shadow: 0 12px 36px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2); }
-.fab:active { transform: translateY(0); }
+  /* ── FAB */
+  .fab-group {
+    position: fixed; bottom: 36px; right: 24px;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 50;
+  }
+  .fab {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,0.18); cursor: pointer;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    -webkit-appearance: none; appearance: none;
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: 50px; font-weight: 600; letter-spacing: 1px; font-size: 12px;
+    text-transform: uppercase; transition: all 0.18s; color: #ffffff;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fab-sm {
+    padding: 10px 18px;
+    background: rgba(40,40,42,0.92);
+    color: rgba(255,255,255,0.6); font-size: 11px;
+  }
+  .fab-lg {
+    padding: 14px 26px;
+    background: rgba(50,50,55,0.95);
+    font-size: 13px; color: #ffffff;
+  }
+  .fab:hover { transform: translateY(-1px); box-shadow: 0 12px 36px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2); }
+  .fab:active { transform: translateY(0); }
 
-/* ── MODAL */
-.overlay {
-position: fixed; inset: 0; z-index: 100;
-background: rgba(0,0,0,0.6);
-backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-display: flex; align-items: flex-end; justify-content: center;
-}
-.sheet {
-background: rgba(18,18,20,0.97);
-background-color: rgb(18,18,20);
-backdrop-filter: blur(40px) saturate(160%);
--webkit-backdrop-filter: blur(40px) saturate(160%);
-border: 1px solid var(–border2);
-border-radius: 24px 24px 0 0;
-padding: 28px 24px 48px;
-width: 100%; max-width: 520px;
-box-shadow: 0 -8px 48px rgba(0,0,0,0.6);
-animation: slideUp 0.3s cubic-bezier(0.32,1,0.6,1);
-}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  /* ── MODAL */
+  .overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .sheet {
+    background: rgba(18,18,20,0.97);
+    background-color: rgb(18,18,20);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    border: 1px solid var(--border2);
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px 48px;
+    width: 100%; max-width: 520px;
+    box-shadow: 0 -8px 48px rgba(0,0,0,0.6);
+    animation: slideUp 0.3s cubic-bezier(0.32,1,0.6,1);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-.sheet-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; margin: 0 auto 26px; }
-.sheet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-.sheet-title { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
-.sheet-sub { font-size: 11px; color: var(–text3); margin-top: 4px; letter-spacing: 0.5px; }
-.close-btn {
-width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.07);
-border: 1px solid var(–border); color: var(–text3); cursor: pointer;
-font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-font-family: inherit; transition: all 0.15s;
-}
-.close-btn:hover { background: rgba(255,255,255,0.12); color: var(–text); }
+  .sheet-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; margin: 0 auto 26px; }
+  .sheet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .sheet-title { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+  .sheet-sub { font-size: 11px; color: var(--text3); margin-top: 4px; letter-spacing: 0.5px; }
+  .close-btn {
+    width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.07);
+    border: 1px solid var(--border); color: var(--text3); cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-family: inherit; transition: all 0.15s;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.12); color: var(--text); }
 
-/* ── FORM */
-.cur-toggle { display: flex; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(–border); border-radius: 14px; padding: 4px; }
-.cur-btn {
-flex: 1; padding: 9px; border: none; cursor: pointer; border-radius: 10px;
--webkit-appearance: none; appearance: none;
-font-family: ‘DM Sans’, -apple-system, sans-serif;
-font-size: 12px; font-weight: 500; letter-spacing: 1px;
-text-transform: uppercase; transition: all 0.2s; background: transparent;
-color: rgba(255,255,255,0.3);
--webkit-tap-highlight-color: transparent;
-}
-.cur-btn.active {
-background: rgba(255,255,255,0.1); color: #ffffff;
-box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
-}
-.field { margin-top: 10px; position: relative; }
-.field input {
-width: 100%; padding: 12px 16px;
-background: rgba(30,30,32,0.9); border: 1px solid rgba(255,255,255,0.12);
-border-radius: var(–r-sm); font-family: ‘DM Sans’, -apple-system, sans-serif;
-font-size: 15px; color: #ffffff; outline: none;
-transition: border-color 0.2s; letter-spacing: 0.2px;
--webkit-appearance: none; appearance: none;
--webkit-text-fill-color: #ffffff;
-}
-.field input:focus { border-color: rgba(255,255,255,0.28); background: rgba(40,40,42,0.95); }
-.field input::placeholder { color: rgba(255,255,255,0.25); -webkit-text-fill-color: rgba(255,255,255,0.25); }
-.field input[type=“date”] { color-scheme: dark; -webkit-text-fill-color: #ffffff; }
-.cat-hint {
-position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-font-size: 9px; color: var(–text3); letter-spacing: 2px; text-transform: uppercase;
-font-weight: 600; pointer-events: none;
-}
-.confirm-btn {
-margin-top: 18px; width: 100%; padding: 15px;
-background: rgba(255,255,255,0.1);
-border: 1px solid rgba(255,255,255,0.18); border-radius: 14px;
-font-family: ‘DM Sans’, -apple-system, sans-serif;
--webkit-appearance: none; appearance: none;
-font-size: 14px; font-weight: 600;
-letter-spacing: 1.5px; text-transform: uppercase;
-color: #ffffff; cursor: pointer;
-box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 4px 16px rgba(0,0,0,0.3);
-transition: all 0.18s;
--webkit-tap-highlight-color: transparent;
-}
-.confirm-btn:hover { background: rgba(255,255,255,0.15); }
-.confirm-btn:active { transform: scale(0.99); }
+  /* ── FORM */
+  .cur-toggle { display: flex; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 4px; }
+  .cur-btn {
+    flex: 1; padding: 9px; border: none; cursor: pointer; border-radius: 10px;
+    -webkit-appearance: none; appearance: none;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 12px; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; transition: all 0.2s; background: transparent;
+    color: rgba(255,255,255,0.3);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cur-btn.active {
+    background: rgba(255,255,255,0.1); color: #ffffff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .field { margin-top: 10px; position: relative; }
+  .field input {
+    width: 100%; padding: 12px 16px;
+    background: rgba(30,30,32,0.9); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 15px; color: #ffffff; outline: none;
+    transition: border-color 0.2s; letter-spacing: 0.2px;
+    -webkit-appearance: none; appearance: none;
+    -webkit-text-fill-color: #ffffff;
+  }
+  .field input:focus { border-color: rgba(255,255,255,0.28); background: rgba(40,40,42,0.95); }
+  .field input::placeholder { color: rgba(255,255,255,0.25); -webkit-text-fill-color: rgba(255,255,255,0.25); }
+  .field input[type="date"] { color-scheme: dark; -webkit-text-fill-color: #ffffff; }
+  .cat-hint {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 9px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 600; pointer-events: none;
+  }
+  .confirm-btn {
+    margin-top: 18px; width: 100%; padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 14px;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    -webkit-appearance: none; appearance: none;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: #ffffff; cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 4px 16px rgba(0,0,0,0.3);
+    transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .confirm-btn:hover { background: rgba(255,255,255,0.15); }
+  .confirm-btn:active { transform: scale(0.99); }
 
-/* ── DANGER */
-.confirm-btn.danger { background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.25); color: rgba(255,110,110,0.9); }
-.confirm-btn.danger:hover { background: rgba(255,60,60,0.14); }
-.confirm-btn.ghost { background: transparent; border-color: var(–border); color: var(–text3); }
-.confirm-btn.ghost:hover { background: rgba(255,255,255,0.05); color: var(–text2); }
-.clear-stats { background: rgba(255,255,255,0.04); border: 1px solid var(–border); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
-.clear-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
-.clear-stat-row + .clear-stat-row { border-top: 1px solid rgba(255,255,255,0.05); }
-.clear-stat-label { font-size: 11px; color: var(–text3); letter-spacing: 1px; text-transform: uppercase; }
-.clear-stat-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); font-family: “DM Mono”, monospace; }
-.step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-.step-dot { width: 6px; height: 6px; border-radius: 50%; background: var(–border2); transition: background 0.2s; }
-.step-dot.active { background: rgba(255,100,100,0.8); }
-.step-dot.done { background: rgba(255,255,255,0.2); }
-.warning-box { background: rgba(255,60,60,0.06); border: 1px solid rgba(255,60,60,0.18); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; font-size: 12px; color: rgba(255,150,150,0.8); letter-spacing: 0.4px; line-height: 1.6; }
-.confirm-input { font-family: “DM Mono”, monospace !important; letter-spacing: 2px !important; text-align: center !important; font-size: 16px !important; font-weight: 500 !important; }
-.fab-danger { padding: 10px 18px; background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.18); color: rgba(255,100,100,0.65); font-size: 11px; }
-/* ── SETTINGS */
-.settings-section { margin-bottom: 28px; }
-.settings-section-label { font-size: 9px; color: var(–text3); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin: 0 0 10px 2px; }
-.settings-group { border-radius: var(–r); overflow: hidden; }
-.settings-row { display: flex; align-items: center; gap: 14px; padding: 15px 16px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid rgba(255,255,255,0.04); }
-.settings-row:last-child { border-bottom: none; }
-.settings-row:active { background: rgba(255,255,255,0.04); }
-.settings-row-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; color: rgba(255,255,255,0.5); flex-shrink: 0; font-family: “DM Mono”, monospace; font-weight: 500; }
-.danger-icon { background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.18); color: rgba(255,100,100,0.6); }
-.settings-row-body { flex: 1; min-width: 0; }
-.settings-row-title { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); }
-.danger-title { color: rgba(255,100,100,0.85); }
-.settings-row-sub { font-size: 11px; color: var(–text3); margin-top: 2px; letter-spacing: 0.3px; }
-.settings-row-arrow { font-size: 18px; color: var(–text3); line-height: 1; }
-.settings-info-card { border-radius: var(–r); padding: 16px 18px; }
-.settings-info-text { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 14px; }
-.settings-info-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
-.settings-info-row span:first-child { color: var(–text3); letter-spacing: 0.5px; }
-.settings-info-row span:last-child { color: rgba(255,255,255,0.5); font-family: “DM Mono”, monospace; font-size: 11px; }
-.toast { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(30,30,30,0.95); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); padding: 10px 22px; border-radius: 50px; font-size: 13px; letter-spacing: 0.5px; backdrop-filter: blur(20px); opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 200; white-space: nowrap; }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.fab-danger:hover { background: rgba(255,60,60,0.14) !important; }
-/* ── DAILY CARDS */
-.daily-cards { display: flex; flex-direction: column; gap: 10px; }
-.daily-card { border-radius: var(–r); overflow: hidden; }
-.daily-card-header {
-display: flex; align-items: center; justify-content: space-between;
-padding: 14px 16px 10px;
-}
-.daily-card-date { font-size: 11px; color: var(–text3); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
-.daily-card-total { font-size: 17px; font-weight: 700; font-family: ‘DM Mono’, monospace; letter-spacing: -0.5px; color: rgba(255,255,255,0.88); }
-.daily-card-meta { display: flex; gap: 10px; padding: 0 16px 12px; }
-.daily-meta-pill {
-font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-border-radius: 20px; padding: 4px 10px; color: rgba(255,255,255,0.35); font-weight: 500;
-}
-.daily-bar-track { height: 2px; background: rgba(255,255,255,0.06); margin: 0 16px 4px; border-radius: 2px; }
-.daily-bar-fill { height: 2px; border-radius: 2px; background: rgba(255,255,255,0.3); transition: width 0.4s ease; }
-.daily-rows { border-top: 1px solid rgba(255,255,255,0.05); }
-.daily-row {
-display: flex; align-items: center; padding: 9px 16px;
-border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
-}
-.daily-row:last-child { border-bottom: none; }
-.daily-row-cat { font-size: 10px; color: var(–text3); letter-spacing: 1.5px; text-transform: uppercase; width: 44px; flex-shrink: 0; font-weight: 500; }
-.daily-row-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
-.daily-row-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
-.daily-row-amt { font-size: 11px; font-family: ‘DM Mono’, monospace; color: rgba(255,255,255,0.4); width: 60px; text-align: right; flex-shrink: 0; }
+  /* ── DANGER */
+  .confirm-btn.danger { background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.25); color: rgba(255,110,110,0.9); }
+  .confirm-btn.danger:hover { background: rgba(255,60,60,0.14); }
+  .confirm-btn.ghost { background: transparent; border-color: var(--border); color: var(--text3); }
+  .confirm-btn.ghost:hover { background: rgba(255,255,255,0.05); color: var(--text2); }
+  .clear-stats { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
+  .clear-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+  .clear-stat-row + .clear-stat-row { border-top: 1px solid rgba(255,255,255,0.05); }
+  .clear-stat-label { font-size: 11px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+  .clear-stat-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); font-family: "DM Mono", monospace; }
+  .step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+  .step-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); transition: background 0.2s; }
+  .step-dot.active { background: rgba(255,100,100,0.8); }
+  .step-dot.done { background: rgba(255,255,255,0.2); }
+  .warning-box { background: rgba(255,60,60,0.06); border: 1px solid rgba(255,60,60,0.18); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; font-size: 12px; color: rgba(255,150,150,0.8); letter-spacing: 0.4px; line-height: 1.6; }
+  .confirm-input { font-family: "DM Mono", monospace !important; letter-spacing: 2px !important; text-align: center !important; font-size: 16px !important; font-weight: 500 !important; }
+  .fab-danger { padding: 10px 18px; background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.18); color: rgba(255,100,100,0.65); font-size: 11px; }
+  /* ── SETTINGS */
+  .settings-section { margin-bottom: 28px; }
+  .settings-section-label { font-size: 9px; color: var(--text3); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin: 0 0 10px 2px; }
+  .settings-group { border-radius: 20px; overflow: hidden; }
+  .settings-row { display: flex; align-items: center; gap: 14px; padding: 15px 16px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row:active { background: rgba(255,255,255,0.04); }
+  .settings-row-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; color: rgba(255,255,255,0.5); flex-shrink: 0; font-family: "DM Mono", monospace; font-weight: 500; }
+  .danger-icon { background: rgba(255,60,60,0.08); border-color: rgba(255,60,60,0.18); color: rgba(255,100,100,0.6); }
+  .settings-row-body { flex: 1; min-width: 0; }
+  .settings-row-title { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .danger-title { color: rgba(255,100,100,0.85); }
+  .settings-row-sub { font-size: 11px; color: var(--text3); margin-top: 2px; letter-spacing: 0.3px; }
+  .settings-row-arrow { font-size: 18px; color: var(--text3); line-height: 1; }
+  .settings-info-card { border-radius: 20px; padding: 16px 18px; }
+  .settings-info-text { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 14px; }
+  .settings-info-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+  .settings-info-row span:first-child { color: var(--text3); letter-spacing: 0.5px; }
+  .settings-info-row span:last-child { color: rgba(255,255,255,0.5); font-family: "DM Mono", monospace; font-size: 11px; }
+  .toast { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(30,30,30,0.95); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); padding: 10px 22px; border-radius: 50px; font-size: 13px; letter-spacing: 0.5px; backdrop-filter: blur(20px); opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 200; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .fab-danger:hover { background: rgba(255,60,60,0.14) !important; }
+  /* ── DAILY CARDS */
+  .daily-cards { display: flex; flex-direction: column; gap: 10px; }
+  .daily-card { border-radius: 20px; overflow: hidden; }
+  .daily-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px 10px;
+  }
+  .daily-card-date { font-size: 11px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+  .daily-card-total { font-size: 17px; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: -0.5px; color: rgba(255,255,255,0.88); }
+  .daily-card-meta { display: flex; gap: 10px; padding: 0 16px 12px; }
+  .daily-meta-pill {
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 4px 10px; color: rgba(255,255,255,0.35); font-weight: 500;
+  }
+  .daily-bar-track { height: 2px; background: rgba(255,255,255,0.06); margin: 0 16px 4px; border-radius: 2px; }
+  .daily-bar-fill { height: 2px; border-radius: 2px; background: rgba(255,255,255,0.3); transition: width 0.4s ease; }
+  .daily-rows { border-top: 1px solid rgba(255,255,255,0.05); }
+  .daily-row {
+    display: flex; align-items: center; padding: 9px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
+  }
+  .daily-row:last-child { border-bottom: none; }
+  .daily-row-cat { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; width: 44px; flex-shrink: 0; font-weight: 500; }
+  .daily-row-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+  .daily-row-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+  .daily-row-amt { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.4); width: 60px; text-align: right; flex-shrink: 0; }
 
-/* ── SCROLLBAR */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
-/* ── ANIMATIONS */
-@keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
-.fade-in { animation: fadeIn 0.4s ease both; }
+  /* ── SLIDER (Safari-safe) */
+  .slider-wrap { margin-top: 14px; }
+  .slider-display {
+    text-align: center; font-size: 26px; font-weight: 700;
+    font-family: 'DM Mono', monospace; color: #ffffff;
+    letter-spacing: -1.5px; margin-bottom: 12px;
+    -webkit-text-fill-color: #ffffff;
+  }
+  .slider-sym { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.45); margin-right: 2px; -webkit-text-fill-color: rgba(255,255,255,0.45); }
+  .slider-labels { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .slider-label { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; -webkit-text-fill-color: rgba(255,255,255,0.3); }
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%; height: 4px;
+    border-radius: 2px; outline: none;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.2);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 24px; height: 24px;
+    border-radius: 50%; border: none;
+    background: #ffffff; cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 4px; border-radius: 2px;
+  }
+  .slider-presets { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .preset-btn {
+    padding: 5px 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.8px;
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 20px;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+    cursor: pointer; -webkit-appearance: none; appearance: none;
+    transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    -webkit-text-fill-color: rgba(255,255,255,0.5);
+  }
+  .preset-btn:active { background: rgba(255,255,255,0.14); color: #fff; -webkit-text-fill-color: #fff; }
+
+  /* ── SAFARI-SPECIFIC FIXES */
+  select {
+    -webkit-appearance: none; appearance: none;
+    background: rgba(30,30,32,0.9);
+    color: #fff; -webkit-text-fill-color: #fff;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 12px 16px;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 15px; outline: none;
+  }
+  /* Prevent zoom on input focus in iOS Safari — 16px min */
+  .field input { font-size: 16px; }
+  select, textarea { font-size: 16px; }
+  /* Fix overscroll bounce showing white */
+  html { overscroll-behavior: none; background: #080808; }
+  body { overscroll-behavior: none; }
+  /* Safe area insets for notch phones */
+  .fab-group { bottom: max(36px, calc(20px + env(safe-area-inset-bottom))); }
+  body { padding-bottom: max(160px, calc(120px + env(safe-area-inset-bottom))); }
+
+  /* ── SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  /* ── ANIMATIONS */
+  @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.4s ease both; }
+
+  /* ── CURRENCY SLIDE TOGGLE */
+  .cur-slider-wrap { margin-top: 4px; }
+  .cur-slide-btn {
+    position: relative; display: flex; align-items: center;
+    width: 100%; height: 52px; padding: 5px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 50px; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden; font-family: 'DM Mono', monospace;
+    box-shadow: none;
+  }
+  .cur-slide-knob {
+    position: absolute; left: 5px; top: 5px;
+    width: calc(50% - 5px); height: calc(100% - 10px);
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 44px; pointer-events: none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 8px rgba(0,0,0,0.3);
+    transition: left 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .cur-slide-knob.jpy { left: calc(50%); }
+  .cur-slide-opt {
+    position: relative; z-index: 1; pointer-events: none;
+    flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.5px; color: rgba(255,255,255,0.35);
+    -webkit-text-fill-color: rgba(255,255,255,0.35);
+    transition: color 0.22s;
+  }
+  .cur-slide-opt.on { color: #fff; -webkit-text-fill-color: #fff; }
+  /* ── AMOUNT INPUT */
+  .amt-field {
+    display: flex; align-items: center;
+    background: rgba(30,30,32,0.9); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; margin-top: 12px; padding: 0 16px; height: 68px;
+  }
+  .amt-sym {
+    font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.4);
+    font-family: 'DM Mono', monospace; flex-shrink: 0; margin-right: 6px;
+    -webkit-text-fill-color: rgba(255,255,255,0.4);
+  }
+  .amt-input {
+    flex: 1; background: transparent !important; border: none !important;
+    outline: none; color: #fff !important; -webkit-text-fill-color: #fff !important;
+    font-family: 'DM Mono', monospace; letter-spacing: -1px;
+    padding: 0; width: 100%; -webkit-appearance: none; appearance: none;
+    font-size: 32px !important; font-weight: 700 !important;
+  }
+  .amt-input::placeholder { color: rgba(255,255,255,0.18) !important; -webkit-text-fill-color: rgba(255,255,255,0.18) !important; }
+
+  /* ── MODE SWITCH */
+  .ios-switch-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 16px;
+  }
+  .ios-switch-body { flex: 1; }
+  .ios-switch-title { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .ios-switch-sub { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; letter-spacing: 0.3px; }
+  .ios-switch {
+    position: relative; width: 51px; height: 31px; flex-shrink: 0; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ios-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .ios-switch-track {
+    position: absolute; inset: 0; border-radius: 34px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.12);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .ios-switch-track.on {
+    background: rgba(255,255,255,0.85);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .ios-switch-thumb {
+    position: absolute; top: 3px; left: 3px;
+    width: 23px; height: 23px; border-radius: 50%;
+    background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .ios-switch-track.on .ios-switch-thumb {
+    transform: translateX(20px);
+    background: #1a1a1e;
+  }
+
+  /* ── MODE BADGE in header */
+  .mode-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 6px;
+    transition: all 0.3s;
+  }
+  .mode-badge.travel {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.55);
+  }
+  .mode-badge.domestic {
+    background: rgba(100,220,150,0.1); border: 1px solid rgba(100,220,150,0.2);
+    color: rgba(100,220,150,0.8);
+  }
+  .mode-badge-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+
+  /* ── DOMESTIC single-card layout */
+  .balance-grid.domestic { grid-template-columns: 1fr; }
+  .balance-card.domestic-full { padding: 28px 24px; }
+  .balance-amount.domestic-big { font-size: 42px; letter-spacing: -2px; }
+
+  /* ── HIDE JPY in domestic */
+  .jpy-hide { display: none !important; }
+
+
+  /* ── QUICK RANGE CHIPS */
+  .quick-range {
+    display: flex; gap: 6px; margin-top: 12px; overflow-x: auto;
+    padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .quick-range::-webkit-scrollbar { display: none; }
+  .qr-btn {
+    flex-shrink: 0; padding: 7px 16px; font-size: 11px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+    background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4);
+    cursor: pointer; -webkit-appearance: none; appearance: none;
+    transition: all 0.18s; -webkit-tap-highlight-color: transparent;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    -webkit-text-fill-color: rgba(255,255,255,0.4);
+  }
+  .qr-btn.active {
+    background: rgba(255,255,255,0.12); color: #fff;
+    border-color: rgba(255,255,255,0.22);
+    -webkit-text-fill-color: #fff;
+  }
+
+  /* ── DASHBOARD CUSTOM RANGE */
+  .dash-range-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .dash-range-input {
+    flex: 1; padding: 8px 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; font-size: 13px; color: #fff; outline: none;
+    -webkit-appearance: none; -webkit-text-fill-color: #fff; color-scheme: dark;
+    font-family: 'DM Mono', monospace;
+  }
+  .dash-range-sep { font-size: 11px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+  .dash-range-apply {
+    padding: 8px 14px; font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
+    background: rgba(255,255,255,0.08); color: #fff; cursor: pointer;
+    -webkit-appearance: none; font-family: 'DM Sans', -apple-system, sans-serif;
+    -webkit-text-fill-color: #fff; -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── REPORT PAGE */
+  .report-section { padding: 18px 0 0; }
+  .report-period-tabs {
+    display: flex; gap: 4px; padding: 4px;
+    background: rgba(28,28,30,0.85); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; margin-bottom: 18px;
+  }
+  .rp-tab {
+    flex: 1; padding: 9px 0; border: none; cursor: pointer; border-radius: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    background: transparent; color: rgba(255,255,255,0.35); transition: all 0.2s;
+    -webkit-appearance: none; font-family: 'DM Sans', -apple-system, sans-serif;
+    -webkit-text-fill-color: rgba(255,255,255,0.35); -webkit-tap-highlight-color: transparent;
+  }
+  .rp-tab.active {
+    background: rgba(255,255,255,0.1); color: #fff; -webkit-text-fill-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .report-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .rp-nav-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6);
+    font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    -webkit-appearance: none; -webkit-tap-highlight-color: transparent; transition: all 0.15s;
+    -webkit-text-fill-color: rgba(255,255,255,0.6);
+  }
+  .rp-nav-btn:active { background: rgba(255,255,255,0.12); }
+  .rp-period-label {
+    font-size: 15px; font-weight: 600; color: #fff; letter-spacing: -0.3px;
+    -webkit-text-fill-color: #fff;
+  }
+
+  /* report summary strip */
+  .rp-summary {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-bottom: 16px;
+  }
+  .rp-sum-card {
+    background: rgba(28,28,30,0.85); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 14px 12px; text-align: center;
+  }
+  .rp-sum-val {
+    font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace;
+    letter-spacing: -0.5px; color: #fff; -webkit-text-fill-color: #fff;
+  }
+  .rp-sum-lbl {
+    font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 2px;
+    text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* report period rows */
+  .rp-rows { display: flex; flex-direction: column; gap: 8px; }
+  .rp-row {
+    background: rgba(28,28,30,0.85); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; overflow: hidden;
+  }
+  .rp-row-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 16px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .rp-row-left {}
+  .rp-row-period { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .rp-row-meta { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; letter-spacing: 0.5px; }
+  .rp-row-right { text-align: right; }
+  .rp-row-amt {
+    font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace;
+    color: #fff; -webkit-text-fill-color: #fff; letter-spacing: -0.3px;
+  }
+  .rp-row-avg { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .rp-row-bar-wrap { height: 2px; background: rgba(255,255,255,0.06); margin: 0 16px 0; }
+  .rp-row-bar { height: 2px; background: rgba(255,255,255,0.28); border-radius: 1px; transition: width 0.4s ease; }
+  .rp-row-detail { border-top: 1px solid rgba(255,255,255,0.05); display: none; }
+  .rp-row-detail.open { display: block; }
+  .rp-detail-item {
+    display: flex; align-items: center; padding: 9px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
+  }
+  .rp-detail-item:last-child { border-bottom: none; }
+  .rp-detail-cat { font-size: 10px; color: rgba(255,255,255,0.35); width: 40px; flex-shrink: 0; letter-spacing: 1px; text-transform: uppercase; }
+  .rp-detail-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; }
+  .rp-detail-bar { height: 100%; border-radius: 2px; }
+  .rp-detail-amt { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.45); width: 64px; text-align: right; flex-shrink: 0; }
+  .rp-empty { text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.25); font-size: 13px; letter-spacing: 0.5px; }
+
+
+  /* ── HEADER MODE TOGGLE (top-right) */
+  .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  .mode-toggle-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 13px; border-radius: 20px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.07);
+    -webkit-appearance: none; appearance: none;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); -webkit-text-fill-color: rgba(255,255,255,0.6);
+    transition: all 0.2s; -webkit-tap-highlight-color: transparent; margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .mode-toggle-btn.domestic {
+    background: rgba(100,220,150,0.1); border-color: rgba(100,220,150,0.22);
+    color: rgba(100,220,150,0.85); -webkit-text-fill-color: rgba(100,220,150,0.85);
+  }
+  .mode-toggle-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0;
+  }
+
+  /* ── DASHBOARD CARD REDESIGN */
+  .dash-card {
+    border-radius: 22px; padding: 22px 20px; position: relative; overflow: hidden;
+    background: rgba(38,38,40,0.9);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .dash-card::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 130px; height: 130px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .dash-card-label {
+    font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.3);
+    text-transform: uppercase; font-weight: 600; margin-bottom: 6px;
+  }
+  .dash-card-range {
+    font-size: 9px; letter-spacing: 2px; color: rgba(255,255,255,0.22);
+    text-transform: uppercase; font-weight: 500; float: right; margin-top: 1px;
+  }
+  .dash-card-spent {
+    font-size: 11px; color: rgba(255,255,255,0.35); margin-bottom: 4px; letter-spacing: 0.3px;
+  }
+  .dash-card-main {
+    font-size: 30px; font-weight: 700; font-family: 'DM Mono', monospace;
+    letter-spacing: -1.5px; line-height: 1; color: #fff; -webkit-text-fill-color: #fff;
+  }
+  .dash-card-main.negative { color: rgba(255,100,100,0.9); -webkit-text-fill-color: rgba(255,100,100,0.9); }
+  .dash-card-sym { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.45); margin-right: 2px; -webkit-text-fill-color: rgba(255,255,255,0.45); }
+  .dash-card-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 14px 0; }
+  .dash-card-sub-row { display: flex; justify-content: space-between; align-items: baseline; }
+  .dash-card-sub-label { font-size: 9px; color: rgba(255,255,255,0.25); letter-spacing: 2px; text-transform: uppercase; }
+  .dash-card-sub-val { font-size: 13px; font-weight: 600; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.55); -webkit-text-fill-color: rgba(255,255,255,0.55); }
+  .dash-card-sub-val.negative { color: rgba(255,100,100,0.7); -webkit-text-fill-color: rgba(255,100,100,0.7); }
+
+  /* single wide card in domestic mode */
+  .balance-grid.domestic .dash-card .dash-card-main { font-size: 40px; }
+
+  /* summary bar labels update */
+  .summary-label-dynamic { transition: opacity 0.2s; }
+
+
+  /* ── DEPOSIT ROW IN LIST */
+  .deposit-row {
+    display: flex; align-items: center; padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.02);
+  }
+  .deposit-row:last-child { border-bottom: none; }
+  .deposit-icon {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; letter-spacing: 0.5px; font-weight: 700;
+    font-family: 'DM Mono', monospace;
+  }
+  .deposit-icon.twd { background: rgba(100,180,255,0.1); color: rgba(100,180,255,0.75); border: 1px solid rgba(100,180,255,0.2); }
+  .deposit-icon.jpy { background: rgba(255,200,100,0.1); color: rgba(255,200,100,0.75); border: 1px solid rgba(255,200,100,0.2); }
+  .deposit-info { flex: 1; margin-left: 12px; }
+  .deposit-title { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6); }
+  .deposit-type  { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .deposit-amount { text-align: right; }
+  .deposit-main { font-size: 15px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: -0.3px; }
+  .deposit-main.twd { color: rgba(100,180,255,0.8); }
+  .deposit-main.jpy { color: rgba(255,200,100,0.8); }
+  .deposit-conv { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* ── TABLE CARD ROWS (grouped list) */
+  .tbl-card-list { display:flex; flex-direction:column; border-radius:20px; overflow:hidden; background:rgba(28,28,30,0.9); border:1px solid rgba(255,255,255,0.08); }
+  .tbl-card { display:flex; align-items:center; gap:13px; padding:13px 16px; border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.12s; -webkit-tap-highlight-color:transparent; }
+  .tbl-card:last-child { border-bottom:none; }
+  .tbl-card:active { background:rgba(255,255,255,0.03); }
+  .tbl-card-icon { width:36px; height:36px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; font-family:'DM Mono',monospace; letter-spacing:0.3px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.3); }
+  .tbl-card-icon.twd  { background:rgba(100,180,255,0.1); border-color:rgba(100,180,255,0.18); color:rgba(100,180,255,0.65); }
+  .tbl-card-icon.jpy  { background:rgba(255,200,100,0.1); border-color:rgba(255,200,100,0.18); color:rgba(255,200,100,0.65); }
+  .tbl-card-icon.scan { background:rgba(180,255,200,0.08); border-color:rgba(180,255,200,0.18); color:rgba(180,255,200,0.55); }
+  .tbl-card-body { flex:1; min-width:0; }
+  .tbl-card-desc { font-size:14px; font-weight:500; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tbl-card-meta { display:flex; gap:5px; align-items:center; margin-top:3px; }
+  .tbl-card-date { font-size:10px; color:rgba(255,255,255,0.28); font-family:'DM Mono',monospace; }
+  .tbl-card-sep  { font-size:8px; color:rgba(255,255,255,0.15); }
+  .tbl-card-cat  { font-size:9px; color:rgba(255,255,255,0.28); letter-spacing:1px; text-transform:uppercase; }
+  .tbl-card-right { text-align:right; flex-shrink:0; }
+  .tbl-card-amt  { font-size:14px; font-weight:700; font-family:'DM Mono',monospace; color:#fff; -webkit-text-fill-color:#fff; letter-spacing:-0.3px; }
+  .tbl-card-conv { font-size:10px; color:rgba(255,255,255,0.22); margin-top:2px; font-family:'DM Mono',monospace; }
+  .tbl-empty     { text-align:center; padding:48px 20px; color:rgba(255,255,255,0.22); font-size:13px; letter-spacing:0.5px; }
+
+  /* ── FAB SCAN */
+  .fab-scan {
+    padding: 11px 20px;
+    background: rgba(60,80,60,0.92);
+    border-color: rgba(180,255,180,0.2);
+    color: rgba(200,255,200,0.85); font-size: 12px;
+    -webkit-text-fill-color: rgba(200,255,200,0.85);
+  }
+
+  /* ── TABLE CARD — tighten layout */
+  .tbl-card-date { font-size: 11px; color: rgba(255,255,255,0.35); font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .tbl-card-amt  { font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; color: #fff; -webkit-text-fill-color: #fff; letter-spacing: -0.5px; white-space: nowrap; }
+  .tbl-card-conv { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 1px; font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .tbl-card-desc { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+
+  /* ── UPLOAD MODAL */
+  .fab-upload {
+    padding: 11px 20px;
+    background: rgba(40,50,80,0.92);
+    border-color: rgba(150,180,255,0.2);
+    color: rgba(180,210,255,0.85); font-size: 12px;
+    -webkit-text-fill-color: rgba(180,210,255,0.85);
+  }
+  .upload-drop-zone {
+    border: 1.5px dashed rgba(255,255,255,0.18);
+    border-radius: 16px; padding: 32px 20px; text-align: center;
+    cursor: pointer; transition: all 0.2s; margin-bottom: 14px;
+    -webkit-tap-highlight-color: transparent;
+    background: rgba(255,255,255,0.03);
+  }
+  .upload-drop-zone:active { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.32); }
+  .upload-drop-zone.has-img { padding: 0; border-style: solid; border-color: rgba(255,255,255,0.14); overflow:hidden; }
+  .upload-drop-zone img { width:100%; display:block; border-radius:14px; max-height:220px; object-fit:cover; }
+  .upload-icon { font-size: 28px; margin-bottom: 10px; opacity: 0.5; }
+  .upload-hint { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 0.3px; }
+  .upload-hint-sub { font-size: 11px; color: rgba(255,255,255,0.22); margin-top: 4px; letter-spacing: 0.3px; }
+  .upload-processing {
+    text-align: center; padding: 24px 0;
+  }
+  .upload-spinner {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-top-color: rgba(255,255,255,0.6);
+    animation: spin 0.8s linear infinite; margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .upload-proc-txt { font-size: 13px; color: rgba(255,255,255,0.45); letter-spacing: 0.5px; }
+
+  /* parsed results list */
+  .parsed-list { display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto; margin-bottom:12px; -webkit-overflow-scrolling:touch; }
+  .parsed-item {
+    display:flex; align-items:center; gap:10px; padding:11px 13px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px; transition:background 0.12s;
+  }
+  .parsed-item.excluded { opacity:0.38; }
+  .parsed-check {
+    width:20px; height:20px; border-radius:6px; flex-shrink:0;
+    border:1.5px solid rgba(255,255,255,0.25); background:transparent;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:#fff; -webkit-text-fill-color:#fff; transition:all 0.15s;
+    -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:transparent;
+  }
+  .parsed-check.on { background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.4); }
+  .parsed-body { flex:1; min-width:0; }
+  .parsed-desc { font-size:13px; font-weight:500; color:rgba(255,255,255,0.82); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .parsed-meta { font-size:10px; color:rgba(255,255,255,0.3); margin-top:2px; letter-spacing:0.5px; }
+  .parsed-amt  { font-size:13px; font-weight:700; font-family:'DM Mono',monospace; color:#fff; -webkit-text-fill-color:#fff; flex-shrink:0; letter-spacing:-0.3px; }
+  .parsed-summary { font-size:11px; color:rgba(255,255,255,0.3); text-align:center; margin-bottom:8px; letter-spacing:0.5px; }
+
+  /* ── BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+    background: rgba(12,12,14,0.95);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bn-range {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 16px 6px; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .bn-range::-webkit-scrollbar { display: none; }
+  .bn-range-btn {
+    flex-shrink: 0; padding: 5px 14px; font-size: 11px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.09); border-radius: 20px;
+    background: transparent; color: rgba(255,255,255,0.35);
+    -webkit-text-fill-color: rgba(255,255,255,0.35);
+    cursor: pointer; -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    transition: all 0.16s;
+  }
+  .bn-range-btn.active {
+    background: rgba(255,255,255,0.1); color: #fff;
+    -webkit-text-fill-color: #fff; border-color: rgba(255,255,255,0.2);
+  }
+  .bn-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 56px 1fr 1fr;
+    align-items: center;
+    padding: 4px 6px 2px; height: 56px; gap: 0;
+  }
+  .bn-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 2px; padding: 6px 0;
+    background: transparent; border: none; cursor: pointer;
+    -webkit-appearance: none; -webkit-tap-highlight-color: transparent;
+    color: rgba(255,255,255,0.3); -webkit-text-fill-color: rgba(255,255,255,0.3);
+    transition: color 0.18s; min-width: 0;
+  }
+  .bn-tab.active { color: #fff; -webkit-text-fill-color: #fff; }
+  .bn-tab-icon { font-size: 16px; line-height: 1; }
+  .bn-tab-label { font-size: 9px; letter-spacing: 0.5px; font-weight: 500; font-family: 'DM Sans', -apple-system, sans-serif; }
+  .bn-add-btn {
+    width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff; -webkit-text-fill-color: #fff;
+    font-size: 22px; font-weight: 300; line-height: 1;
+    cursor: pointer; -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.15s; margin: 0 4px;
+  }
+  .bn-add-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
+
+
+  /* ── EXPENSE MODAL ACTION ROW */
+  .exp-action-row {
+    display: flex; align-items: center; margin-bottom: 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; overflow: hidden;
+  }
+  .exp-action-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 12px 0; background: transparent; border: none; cursor: pointer;
+    -webkit-appearance: none; -webkit-tap-highlight-color: transparent; transition: background 0.15s;
+  }
+  .exp-action-btn:active { background: rgba(255,255,255,0.08); }
+  .exp-action-icon { font-size: 18px; color: rgba(255,255,255,0.5); -webkit-text-fill-color: rgba(255,255,255,0.5); }
+  .exp-action-label { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); -webkit-text-fill-color: rgba(255,255,255,0.35); font-family: 'DM Sans', -apple-system, sans-serif; }
+  .exp-action-sep { width: 1px; height: 40px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
+
+  /* ── CATEGORY PICKER */
+  .cat-picker {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+  }
+  .cat-pick-btn {
+    padding: 6px 13px; font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+    background: transparent; color: rgba(255,255,255,0.38);
+    -webkit-text-fill-color: rgba(255,255,255,0.38);
+    cursor: pointer; -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent; transition: all 0.14s;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+  }
+  .cat-pick-btn.active {
+    background: rgba(255,255,255,0.12); color: #fff;
+    -webkit-text-fill-color: #fff; border-color: rgba(255,255,255,0.25);
+  }
 </style>
-
 </head>
 <body>
 <div class="glow-tl"></div>
@@ -432,68 +1025,91 @@ border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
 <div class="app">
 
   <!-- HEADER -->
-
   <div class="header fade-in">
-    <p class="header-label">旅遊記帳</p>
-    <h1 class="header-title">資產 <strong>總覽</strong></h1>
+    <div class="header-row">
+      <div>
+        <div class="mode-badge travel" id="mode-badge">
+          <div class="mode-badge-dot"></div>
+          <span id="mode-badge-text">出國模式</span>
+        </div>
+        <h1 class="header-title" id="header-title">資產 <strong>總覽</strong></h1>
+      </div>
+      <button class="mode-toggle-btn" id="mode-toggle-btn" onclick="toggleTravelMode()">
+        <div class="mode-toggle-dot"></div>
+        <span id="mode-toggle-txt">出國</span>
+      </button>
+    </div>
   </div>
 
+  <!-- DASHBOARD (hidden on settings tab) -->
+  <div id="dashboard-area">
   <!-- BALANCE CARDS -->
-
   <div class="balance-grid fade-in" style="animation-delay:.08s">
-    <div class="balance-card card-strong" id="twd-card">
-      <p class="balance-label">新台幣</p>
-      <div>
-        <span class="balance-symbol">NT$</span>
-        <span class="balance-amount" id="twd-amount">0</span>
+    <div class="dash-card" id="twd-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">
+        <span class="dash-card-label">新台幣餘額</span>
+        <span class="dash-card-range" id="twd-range-label">全部</span>
       </div>
-      <p class="balance-sub" id="twd-sub">≈ ¥0</p>
+      <div>
+        <span class="dash-card-sym">NT$</span><span class="dash-card-main" id="twd-amount">0</span>
+      </div>
+      <div class="dash-card-divider"></div>
+      <div class="dash-card-sub-row">
+        <span class="dash-card-sub-label" id="twd-spent-label">期間花費</span>
+        <span class="dash-card-sub-val" id="twd-spent">NT$0</span>
+      </div>
+      <div class="dash-card-sub-row" style="margin-top:4px">
+        <span class="dash-card-sub-label">換算</span>
+        <span class="dash-card-sub-val" id="twd-sub">≈ ¥0</span>
+      </div>
     </div>
-    <div class="balance-card card-strong" id="jpy-card">
-      <p class="balance-label">日圓</p>
-      <div>
-        <span class="balance-symbol">¥</span>
-        <span class="balance-amount" id="jpy-amount">0</span>
+    <div class="dash-card" id="jpy-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">
+        <span class="dash-card-label">日圓餘額</span>
+        <span class="dash-card-range" id="jpy-range-label">全部</span>
       </div>
-      <p class="balance-sub" id="jpy-sub">≈ NT$0</p>
+      <div>
+        <span class="dash-card-sym">¥</span><span class="dash-card-main" id="jpy-amount">0</span>
+      </div>
+      <div class="dash-card-divider"></div>
+      <div class="dash-card-sub-row">
+        <span class="dash-card-sub-label" id="jpy-spent-label">期間花費</span>
+        <span class="dash-card-sub-val" id="jpy-spent">¥0</span>
+      </div>
+      <div class="dash-card-sub-row" style="margin-top:4px">
+        <span class="dash-card-sub-label">換算</span>
+        <span class="dash-card-sub-val" id="jpy-sub">≈ NT$0</span>
+      </div>
     </div>
   </div>
 
   <!-- SUMMARY BAR -->
-
   <div class="summary-bar card fade-in" style="animation-delay:.14s">
     <div class="summary-item">
-      <div class="summary-value" id="sum-spent">NT$0</div>
-      <div class="summary-label">累計支出</div>
-    </div>
-    <div class="summary-divider"></div>
-    <div class="summary-item">
       <div class="summary-value" id="sum-count">0</div>
-      <div class="summary-label">消費筆數</div>
+      <div class="summary-label summary-label-dynamic" id="sum-count-label">消費筆數</div>
     </div>
     <div class="summary-divider"></div>
     <div class="summary-item">
       <div class="summary-value" id="sum-cats">0</div>
-      <div class="summary-label">類別數</div>
+      <div class="summary-label">消費類別</div>
+    </div>
+    <div class="summary-divider"></div>
+    <div class="summary-item">
+      <div class="summary-value" id="sum-avg">NT$0</div>
+      <div class="summary-label">平均每筆</div>
     </div>
   </div>
+  </div><!-- end dashboard-area -->
 
-  <!-- TAB BAR -->
 
-  <div class="tabs card fade-in" style="animation-delay:.18s">
-    <button class="tab-btn active" id="tab-list" onclick="switchTab('list')">明細</button>
-    <button class="tab-btn" id="tab-chart" onclick="switchTab('chart')">圖表</button>
-    <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')">設定</button>
-  </div>
 
   <!-- LIST -->
-
   <div id="view-list" class="list-section">
     <div id="expense-list-wrap"></div>
   </div>
 
   <!-- CHARTS -->
-
   <div id="view-chart" class="chart-section" style="display:none">
     <div class="chart-card card">
       <p class="chart-label">消費分類佔比</p>
@@ -521,67 +1137,223 @@ border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
     <div id="daily-cards-wrap"></div>
   </div>
 
-  <!-- SETTINGS -->
+  <!-- TABLE VIEW -->
+  <div id="view-table" style="display:none" class="table-section">
+    <div class="table-summary-row">
+      <div class="table-sum-card card">
+        <div class="table-sum-val" id="tbl-total">NT$0</div>
+        <div class="table-sum-lbl">總支出</div>
+      </div>
+      <div class="table-sum-card card">
+        <div class="table-sum-val" id="tbl-count">0</div>
+        <div class="table-sum-lbl">筆數</div>
+      </div>
+      <div class="table-sum-card card">
+        <div class="table-sum-val" id="tbl-avg">NT$0</div>
+        <div class="table-sum-lbl">平均</div>
+      </div>
+    </div>
+    <div class="table-controls">
+      <input class="table-search" id="tbl-search" type="text" placeholder="搜尋消費描述或類別..." oninput="renderTable()" autocomplete="off">
+    </div>
+    <div class="table-sort-row">
+      <button class="tbl-sort-chip active" id="sc-date"   onclick="sortTable('date')">日期</button>
+      <button class="tbl-sort-chip"        id="sc-amount" onclick="sortTable('amount')">金額</button>
+      <button class="tbl-sort-chip"        id="sc-cat"    onclick="sortTable('cat')">類別</button>
+      <button class="tbl-sort-chip"        id="sc-desc"   onclick="sortTable('desc')">名稱</button>
+    </div>
+    <div class="tbl-card-list" id="tbl-body"></div>
+  </div>
 
+  <!-- REPORT -->
+  <div id="view-report" style="display:none" class="report-section">
+    <div class="report-period-tabs">
+      <button class="rp-tab active" id="rpt-year"  onclick="setReportPeriod('year')">年</button>
+      <button class="rp-tab"        id="rpt-month" onclick="setReportPeriod('month')">月</button>
+      <button class="rp-tab"        id="rpt-week"  onclick="setReportPeriod('week')">週</button>
+    </div>
+    <div class="report-nav">
+      <button class="rp-nav-btn" onclick="reportStep(-1)">‹</button>
+      <span class="rp-period-label" id="rp-label">2026</span>
+      <button class="rp-nav-btn" onclick="reportStep(1)">›</button>
+    </div>
+    <div class="rp-summary">
+      <div class="rp-sum-card"><div class="rp-sum-val" id="rp-total">NT$0</div><div class="rp-sum-lbl">總支出</div></div>
+      <div class="rp-sum-card"><div class="rp-sum-val" id="rp-count">0</div><div class="rp-sum-lbl">筆數</div></div>
+      <div class="rp-sum-card"><div class="rp-sum-val" id="rp-avg">NT$0</div><div class="rp-sum-lbl">平均/期</div></div>
+    </div>
+    <div class="rp-rows" id="rp-rows"></div>
+  </div>
+
+  <!-- SETTINGS -->
   <div id="view-settings" style="display:none;padding:18px 0 0">
+
     <div class="settings-section">
-      <p class="settings-section-label">資料備份</p>
+      <p class="settings-section-label">使用模式</p>
+      <div class="settings-group card">
+        <div class="ios-switch-row">
+          <div class="ios-switch-body">
+            <div class="ios-switch-title" id="mode-sw-title">出國模式</div>
+            <div class="ios-switch-sub" id="mode-sw-sub">顯示台幣與日幣雙幣別</div>
+          </div>
+          <label class="ios-switch" onclick="toggleTravelMode()">
+            <div class="ios-switch-track on" id="sw-track">
+              <div class="ios-switch-thumb"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-section-label">自訂顯示區間</p>
+      <div class="settings-group card">
+        <div style="padding:14px 16px">
+          <div class="dash-range-row" style="padding:0;border:none;width:100%;gap:8px;display:flex;align-items:center">
+            <input type="date" class="dash-range-input" id="custom-from" placeholder="起始日" onchange="saveCustomRange()">
+            <span class="dash-range-sep">—</span>
+            <input type="date" class="dash-range-input" id="custom-to" placeholder="結束日" onchange="saveCustomRange()">
+          </div>
+          <button class="dash-range-apply" style="margin-top:10px;width:100%" onclick="setRange('custom');showToast('已套用自訂區間')">套用</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-section-label">匯率設定</p>
+      <div class="settings-group card">
+        <div style="padding:14px 16px">
+          <div class="settings-row-sub" style="margin-bottom:10px">1 TWD 兌換多少 JPY</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace;white-space:nowrap">1 NT$ =</span>
+            <input type="number" id="rate-input" step="0.01" placeholder="4.52" inputmode="decimal"
+              style="flex:1;padding:10px 12px;background:rgba(30,30,32,0.9);border:1px solid rgba(255,255,255,0.12);
+                     border-radius:10px;font-size:16px;color:#fff;-webkit-text-fill-color:#fff;outline:none;
+                     -webkit-appearance:none;font-family:'DM Mono',monospace;"
+              oninput="saveExchangeRate()">
+            <span style="font-size:12px;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace;white-space:nowrap">¥</span>
+          </div>
+          <div id="rate-status" style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px;letter-spacing:0.3px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <p class="settings-section-label">資料</p>
       <div class="settings-group card">
         <div class="settings-row" onclick="exportData()">
           <div class="settings-row-icon">↑</div>
           <div class="settings-row-body">
-            <div class="settings-row-title">匯出資料</div>
-            <div class="settings-row-sub">下載 JSON 備份檔案</div>
+            <div class="settings-row-title">匯出備份</div>
+            <div class="settings-row-sub">下載 JSON 檔案</div>
           </div>
           <div class="settings-row-arrow">›</div>
         </div>
         <div class="settings-row" onclick="document.getElementById('import-file').click()">
           <div class="settings-row-icon">↓</div>
           <div class="settings-row-body">
-            <div class="settings-row-title">匯入資料</div>
-            <div class="settings-row-sub">從 JSON 備份還原記帳</div>
+            <div class="settings-row-title">匯入備份</div>
+            <div class="settings-row-sub">從 JSON 檔案還原</div>
+          </div>
+          <div class="settings-row-arrow">›</div>
+        </div>
+        <div class="settings-row" onclick="openBalanceHistory()">
+          <div class="settings-row-icon">≡</div>
+          <div class="settings-row-body">
+            <div class="settings-row-title">儲值紀錄</div>
+            <div class="settings-row-sub">查看所有儲值歷史</div>
           </div>
           <div class="settings-row-arrow">›</div>
         </div>
       </div>
     </div>
+
     <div class="settings-section">
-      <p class="settings-section-label">關於資料儲存</p>
       <div class="settings-info-card card">
-        <p class="settings-info-text">資料儲存於此裝置的瀏覽器（localStorage）。換裝置或清除快取時資料不會自動轉移，建議定期使用「匯出資料」備份。</p>
-        <div class="settings-info-row"><span>版本</span><span id="settings-ver">v1.0</span></div>
-        <div class="settings-info-row"><span>儲存狀態</span><span id="settings-storage-status">—</span></div>
+        <div class="settings-info-row"><span>儲存大小</span><span id="settings-storage-status">—</span></div>
         <div class="settings-info-row"><span>上次更新</span><span id="settings-last-update">—</span></div>
       </div>
     </div>
+
     <div class="settings-section">
-      <p class="settings-section-label">危險操作</p>
       <div class="settings-group card">
         <div class="settings-row settings-danger-row" onclick="openClear()">
           <div class="settings-row-icon danger-icon">✕</div>
           <div class="settings-row-body">
-            <div class="settings-row-title danger-title">清除本次記帳</div>
+            <div class="settings-row-title danger-title">清除所有記帳</div>
             <div class="settings-row-sub">刪除所有餘額與消費記錄</div>
           </div>
           <div class="settings-row-arrow">›</div>
         </div>
       </div>
     </div>
+
   </div>
   <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
 
 </div>
 
 <!-- FAB -->
-
-<div class="fab-group" id="main-fab">
-  <button class="fab fab-sm" onclick="openModal('balance')">儲值</button>
+<div class="fab-group" id="main-fab" style="display:none">
   <button class="fab fab-lg" onclick="openModal('expense')">記一筆</button>
 </div>
+<input type="file" id="upload-img-file" accept="image/*" style="display:none" onchange="handleUploadFile(event)">
 <div class="toast" id="toast"></div>
 
-<!-- MODAL: CLEAR -->
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav">
+  <!-- row 1: range chips -->
+  <div class="bn-range" id="bn-range-row">
+    <button class="bn-range-btn active" id="qr-all"    onclick="setRange('all')">全部</button>
+    <button class="bn-range-btn"        id="qr-month"  onclick="setRange('month')">本月</button>
+    <button class="bn-range-btn"        id="qr-week"   onclick="setRange('week')">本週</button>
+    <button class="bn-range-btn"        id="qr-today"  onclick="setRange('today')">今天</button>
+    <button class="bn-range-btn"        id="qr-custom" onclick="setRange('custom')">自訂</button>
+  </div>
+  <!-- row 2: tabs + add -->
+  <div class="bn-tabs">
+    <button class="bn-tab active" id="tab-list"     onclick="switchTab('list')">
+      <span class="bn-tab-icon">≡</span>
+      <span class="bn-tab-label">明細</span>
+    </button>
+    <button class="bn-tab" id="tab-chart"    onclick="switchTab('chart')">
+      <span class="bn-tab-icon">◎</span>
+      <span class="bn-tab-label">圖表</span>
+    </button>
+    <button class="bn-tab" id="tab-table"    onclick="switchTab('table')">
+      <span class="bn-tab-icon">⊟</span>
+      <span class="bn-tab-label">表格</span>
+    </button>
+    <button class="bn-tab" id="tab-report"   onclick="switchTab('report')">
+      <span class="bn-tab-icon">◈</span>
+      <span class="bn-tab-label">報表</span>
+    </button>
+    <!-- centre add button -->
+    <button class="bn-add-btn" onclick="openModal('expense')">＋</button>
+    <button class="bn-tab" id="tab-settings" onclick="switchTab('settings')">
+      <span class="bn-tab-icon">⊙</span>
+      <span class="bn-tab-label">設定</span>
+    </button>
+  </div>
+</div>
 
+
+<!-- MODAL: BALANCE HISTORY -->
+<div class="overlay" id="modal-hist" style="display:none" onclick="bgClose(event,'modal-hist')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">儲值紀錄</div>
+        <div class="sheet-sub" id="hist-sub">共 0 筆</div>
+      </div>
+      <button class="close-btn" onclick="closeModal('modal-hist')">✕</button>
+    </div>
+    <div id="hist-list" style="max-height:60vh;overflow-y:auto;margin:0 -4px;"></div>
+  </div>
+</div>
+
+
+<!-- MODAL: CLEAR -->
 <div class="overlay" id="modal-clear" style="display:none" onclick="bgClose(event,'modal-clear')">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -630,32 +1402,65 @@ border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
     <div class="field">
       <input type="number" id="bal-amt" placeholder="輸入金額" inputmode="decimal">
     </div>
+    <div class="field">
+      <input type="text" id="bal-note" placeholder="說明（選填，例：換匯、薪水）" autocomplete="off">
+    </div>
     <button class="confirm-btn" onclick="addBalance()">確認儲值</button>
   </div>
 </div>
 
 <!-- MODAL: EXPENSE -->
-
 <div class="overlay" id="modal-expense" style="display:none" onclick="bgClose(event,'modal-expense')">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-header">
       <div>
-        <div class="sheet-title">新增消費</div>
-        <div class="sheet-sub">描述關鍵字即可自動分類</div>
+        <div class="sheet-title">記帳</div>
+        <div class="sheet-sub">描述關鍵字自動分類</div>
       </div>
       <button class="close-btn" onclick="closeModal('modal-expense')">✕</button>
     </div>
-    <div class="cur-toggle">
-      <button class="cur-btn active" id="exp-twd" onclick="setCur('exp','TWD')">新台幣 NT$</button>
-      <button class="cur-btn" id="exp-jpy" onclick="setCur('exp','JPY')">日圓 ¥</button>
+    <!-- Quick actions row -->
+    <div class="exp-action-row">
+      <button class="exp-action-btn" onclick="closeModal('modal-expense');openModal('balance')">
+        <span class="exp-action-icon">＋</span>
+        <span class="exp-action-label">儲值</span>
+      </button>
+      <div class="exp-action-sep"></div>
+      <button class="exp-action-btn" onclick="closeModal('modal-expense');openScanModal()">
+        <span class="exp-action-icon">⊡</span>
+        <span class="exp-action-label">掃描發票</span>
+      </button>
     </div>
-    <div class="field">
-      <input type="number" id="exp-amt" placeholder="金額" inputmode="decimal">
+    <!-- Currency slider toggle -->
+    <div class="cur-slider-wrap">
+      <button class="cur-slide-btn" id="cur-slide-btn" onclick="toggleCurSlider()" type="button">
+        <div class="cur-slide-knob" id="cur-slide-knob"></div>
+        <span class="cur-slide-opt" id="cs-twd">NT$　新台幣</span>
+        <span class="cur-slide-opt" id="cs-jpy">¥　日圓</span>
+      </button>
+    </div>
+    <div class="amt-field">
+      <span class="amt-sym" id="amt-sym">NT$</span>
+      <input type="number" id="exp-amt" class="amt-input" placeholder="0" inputmode="decimal">
     </div>
     <div class="field">
       <input type="text" id="exp-desc" placeholder="消費描述" oninput="updateCatHint()" autocomplete="off">
       <span class="cat-hint" id="cat-hint"></span>
+    </div>
+    <!-- Category picker -->
+    <div class="cat-picker" id="cat-picker">
+      <button class="cat-pick-btn active" id="cp-auto" onclick="pickCat(null)">自動</button>
+      <button class="cat-pick-btn" id="cp-餐飲" onclick="pickCat('餐飲')">餐飲</button>
+      <button class="cat-pick-btn" id="cp-交通" onclick="pickCat('交通')">交通</button>
+      <button class="cat-pick-btn" id="cp-購物" onclick="pickCat('購物')">購物</button>
+      <button class="cat-pick-btn" id="cp-觀光" onclick="pickCat('觀光')">觀光</button>
+      <button class="cat-pick-btn" id="cp-住宿" onclick="pickCat('住宿')">住宿</button>
+      <button class="cat-pick-btn" id="cp-娛樂" onclick="pickCat('娛樂')">娛樂</button>
+      <button class="cat-pick-btn" id="cp-醫療" onclick="pickCat('醫療')">醫療</button>
+      <button class="cat-pick-btn" id="cp-咖啡廳" onclick="pickCat('咖啡廳')">咖啡廳</button>
+      <button class="cat-pick-btn" id="cp-超市生鮮" onclick="pickCat('超市生鮮')">超市</button>
+      <button class="cat-pick-btn" id="cp-其他" onclick="pickCat('其他')">其他</button>
     </div>
     <div class="field">
       <input type="date" id="exp-date">
@@ -666,31 +1471,466 @@ border-bottom: 1px solid rgba(255,255,255,0.03); gap: 10px;
 
 <script>
 /* ── DATA ── */
-const TWD_JPY = 4.52;
+let TWD_JPY = parseFloat(localStorage.getItem("exchange_rate")) || 4.52;
 const CATS = {
-  '餐飲':  ['餐','食','飯','麵','咖啡','cafe','food','eat','drink','飲','茶','壽司','拉麵','便當','小吃','burger','pizza','sushi','restaurant','吃'],
-  '交通':  ['mrt','捷運','taxi','uber','bus','公車','電車','新幹線','地鐵','metro','train','jr','交通','票','suica','ic'],
-  '購物':  ['買','購','shop','store','百貨','超市','7-11','全家','超商','mall','market','藥妝','唐吉'],
-  '觀光':  ['神社','寺','城','博物館','museum','park','公園','景點','門票','ticket','入場','迪士尼'],
-  '住宿':  ['飯店','hotel','旅館','hostel','airbnb','住宿','inn'],
-  '娛樂':  ['電影','movie','game','遊戲','ktv','bar','酒','娛樂','live'],
-  '醫療':  ['藥','醫院','診所','medical','pharmacy'],
-  '其他':  [],
+
+  '餐飲': [
+    // ── 吃喝動詞（高精準度單字）
+    '吃飯','吃麵','吃壽司','吃燒肉','吃拉麵','吃火鍋','吃鍋','吃串','吃烤','吃炸',
+    '喝咖啡','喝茶','喝飲料','喝酒','喝湯','喝奶茶','喝果汁','喝啤酒',
+    '點餐','外帶','外送','內用','帶走','自取','到府',
+    '外食','熟食','便當','快餐','套餐','定食','合菜','小吃','夜宵','消夜',
+    // ── 餐別
+    '早餐','早午餐','午餐','下午茶','晚餐','宵夜','點心','brunch',
+    // ── 烹飪動詞（本身就代表餐飲消費）
+    '火鍋','燒肉','燒烤','炭烤','串燒','鐵板燒','涮涮','麻辣鍋','薑母鴨','羊肉爐','薑鴨',
+    // ── 台灣庶民
+    '便當','自助餐','合菜','熱炒','快炒','小吃','夜市','路邊攤','攤販',
+    '鹹酥雞','臭豆腐','蚵仔煎','牛肉麵','刈包','控肉','豬腳','豆漿','油條','燒餅','蛋餅',
+    '肉圓','米苔目','碗粿','虱目魚','肉燥','魯肉飯','排骨飯','雞腿飯','豬排飯',
+    '鐤邊趖','大腸麵線','蚵仔麵線','當歸鴨','麻辣','涮涮鍋',
+    '串串','甜不辣','關東煮','滷味','涼麵','蔥油餅','胡椒餅','水煎包',
+    '大腸包小腸','芋圓','湯圓','麻糬','草仔粿','肉粽','八寶粥',
+
+    // ── 台灣連鎖餐廳
+    '爭鮮','壽司郎','くら寿司','くら','藏壽司','初魚','一壽司','鮭魚壽司',
+    '瓦城','泰饗','大心','月月','夯番薯','紅辣椒','饗食天堂','饗饗','漢來',
+    '王品','陶板屋','西堤','夏慕尼','kkbox','品田牧場','原燒','聚北海道',
+    '吉列客','好市多熟食','costco小吃','costco pizza',
+    '鼎泰豐','金品','欣葉','欣葉小聚','欣葉日本料理',
+    '胡椒廚房','煙波','太子殿','蒸龍宮','海膽','海鮮',
+    '丸龜製麵','杏子豬排','八方雲集','龍鳳小館','石二鍋',
+    '滿堂紅','三媽臭臭鍋','鴛鴦鍋','海底撈','呷哺呷哺',
+    '麥味登','弘爺漢堡','美而美','早安美芝城','拿坡里',
+    '林東芳','師園鹽酥雞','豪大雞排','吐司工坊','布蘭奇','聯一',
+    '三商巧福','拿坡里披薩','必勝客','達美樂','pizza hut',
+    '肯德基','麥當勞','摩斯漢堡','mos','頂呱呱','21世紀',
+    '路易莎','cama','星巴克','路易莎咖啡','丹堤',
+    '50嵐','coco都可','大苑子','清心良品','一芳','茶湯會','春水堂',
+    '日出茶太','天仁茗茶','喫茶小舖','迷客夏','milksha',
+    '85度c','爸爸糖','波波廚房','甜點','雪王冰淇淋','冰淇淋',
+
+    // ── 飲料手搖
+    '手搖','奶茶','珍珠','珍奶','波霸','粉圓','仙草','愛玉','冬瓜','青茶','烏龍',
+    '綠茶','紅茶','茉莉','四季春','鐵觀音','半糖','少糖','去冰',
+    '果汁','柳橙汁','西瓜汁','芒果汁','葡萄汁','鳳梨汁','百香果','檸檬汁','椰奶',
+    '可樂','雪碧','沙士','黑松',
+    // ── 日式
+    '壽司','握壽司','捲壽司','手捲','迴轉壽司','omakase','無菜單',
+    '拉麵','味噌拉麵','豚骨','醬油拉麵','鹽味拉麵','沾麵','乾拌麵','つけ麺',
+    '烏龍','蕎麥','天婦羅','炸豬排','豬排','とんかつ','カツ',
+    '居酒屋','焼き鳥','ホルモン','韓式燒肉','焼肉','yakiniku',
+    'しゃぶしゃぶ','冷麺','餃子','チャーハン','炒飯','焼売','小籠包','担々麺',
+    'おにぎり','飯糰','弁当','駅弁','sashimi','ramen','udon','tempura','izakaya','bento','yakitori',
+    '牛丼','吉野家','すき家','松屋','なか卯','天丼','かつ丼','うな丼','鰻魚',
+    '迴轉','刺身','生魚片','海鮮丼','親子丼',
+    // ── 西式速食
+    'burger','漢堡','麥當勞','mcdonalds','肯德基','kfc','摩斯','mos burger',
+    'subway','漢堡王','burger king','shake shack',
+    'pizza','必勝客','pizza hut','達美樂','domino','薩莉亞','サイゼリヤ',
+    'pasta','義大利麵','燉飯','risotto','steak','牛排','西餐','排餐',
+    'sandwich','三明治','潛艇堡','bagel','貝果','toast','吐司',
+    'salad','沙拉','bbq','烤雞','炸雞','薯條','熱狗','corn dog','章魚燒','たこ焼き',
+    // ── 餐廳通用
+    'restaurant','bistro','diner','eatery','food court','美食廣場','食堂',
+    '吃到飽','放題','食べ放題','飲み放題','自助吧',
+    'food','meal','lunch','dinner','breakfast','snack','dessert','drink','eat',
+    'cafe','coffee shop','bakery',
+  ],
+
+  '交通': [
+    // ── 搭乘動詞組合
+    '搭捷運','坐捷運','搭公車','坐公車','搭火車','坐火車','搭電車','坐電車',
+    '搭計程車','搭uber','叫計程車','叫車','搭船','搭渡輪','坐船',
+    '搭高鐵','坐高鐵','搭新幹線','坐新幹線','搭飛機','坐飛機','乘機',
+    '坐地鐵','搭地鐵','坐巴士','搭巴士','轉乘','轉車','換乘','換車',
+
+    // ── 台灣交通
+    '台鐵','臺鐵','自強號','莒光號','普悠瑪','太魯閣號','區間車','區間快',
+    '高鐵','台灣高鐵','thsr','左營','板橋站','台中站','苗栗站',
+    '捷運','台北捷運','高雄捷運','桃園捷運','機場捷運',
+    '悠遊卡','一卡通','ipass','icash','line pay悠遊','悠遊付',
+    '公路客運','統聯','葛瑪蘭','豐原客運','國光客運','首都客運',
+    'youbike','ubike','youbike2','u-bike','腳踏車','ubike站',
+    '台灣好行','觀光巴士','快捷巴士','市區公車','公路總站',
+
+    // ── 大眾運輸
+    'mrt','捷運','metro','地鐵','subway','tube','u-bahn','s-bahn','地下鐵','地下鉄',
+    '文湖線','淡水線','板南線','松山線','中和線','環狀線','機場捷運',
+    'bus','公車','巴士','客運','バス','高速バス','高速巴士','夜行巴士','臥鋪巴士','接駁',
+    'train','jr','電車','火車','台鐵','普悠瑪','太魯閣','自強','莒光','區間','區間快',
+    '新幹線','shinkansen','のぞみ','ひかり','こだま','高鐵','thsr','bullet train',
+    '特急','急行','普通電車','快特',
+    '山手線','中央線','東海道線','京浜東北','総武線','常磐線','京葉線',
+    '阪急','阪神','近鐵','南海','京阪','東急','西武','京王','小田急',
+    // ── 計程車共乘
+    'taxi','計程車','小黃','uber','lyft','grab','didi','滴滴','gojek','ola','bolt',
+    '包車','黑頭車','limousine','接機','送機','預約車',
+    // ── 自行車機車
+    'ubike','youbike','citibike','共享單車','腳踏車','自行車','機車','摩托車',
+    'scooter','gogoro','電動車','125','重機','bike','cycling',
+    // ── 航空
+    'flight','機票','航空','airline','airport','機場','飛機','廉航','lcc',
+    '華航','長榮','國泰','日航','全日空','ana','jal','scoot',
+    '樂桃','peach','捷星','jetstar','虎航','tigerair','星宇','united','delta',
+    '行李費','托運','超重行李','航班','轉機','直飛','過境','登機',
+    // ── 船渡輪
+    'ferry','ship','船','渡輪','快艇','遊輪','郵輪','cruise','水上巴士',
+    '離島','澎湖船','金門船','馬祖船','淡水渡船','宮島フェリー','直島',
+    // ── 租車
+    '租車','car rental','hertz','avis','times car','orix','carshare','共享汽車','自駕',
+    // ── 通票IC卡
+    'suica','pasmo','icoca','manaca','toica','nimoca','hayakaken','kitaca',
+    '悠遊卡','一卡通','ipass','easy card','ic卡','一日券','週票','3日券',
+    '關西周遊券','jr pass','青春18','通票','pass','乘車券','交通卡',
+    // ── 停車過路油
+    '停車費','停車','parking','停車場','代客泊車','valet',
+    '過路費','tolls','etc','高速費','通行費','加油','油費','diesel','petrol',
+    '車資','票價','交通費',
+  ],
+
+  '購物': [
+    // ── 購物動詞組合（精準）
+    '買衣服','買鞋','買包','買手機','買電腦','買相機','買玩具','買書','買漫畫',
+    '買零食','買伴手禮','買紀念品','買禮物','買化妝品','買保養品','買香水',
+    '買配件','買手錶','買眼鏡','買帽子','買包包','買皮夾','買文具',
+    '逛街','血拼','購物','shopping','shop','buy','purchase','採購','添購',
+
+    // ── 台灣超市生鮮
+    '全聯','全聯超市','大潤發','愛買','家樂福','好市多','costco',
+    '主婦聯盟','棉花田','里仁','松青','惠康','頂好','wellcome',
+    '傳統市場','黃昏市場','早市','市場','果菜市場','魚市','肉攤','菜攤',
+    '有機蔬菜','有機','產銷履歷','台灣豬','國產','在地食材',
+    '滷味材料','火鍋料','湯底','高湯','甜辣醬','沙茶醬','豆腐乳',
+    '醬油膏','甜麵醬','辣椒醬','薑泥','蒜泥','九層塔','香菜','蔥',
+
+    // ── 台灣通路
+    '超商','7-11','seven','全家','family mart','萊爾富','hi-life','ok mart',
+    '大潤發','愛買','棉花田','主婦聯盟','里仁','誠食','jason','jasons','market place',
+    '屈臣氏','watsons','康是美','寶雅',
+    // ── 日本通路
+    'don quijote','ドン・キホーテ','ドンキ','唐吉訶德',
+    '大創','daiso','seria','セリア','キャンドゥ','can do','3coins','3コイン',
+    '無印良品','muji','無印','loft','ロフト','東急hands','tokyu hands','ハンズ',
+    'nitori','ニトリ','ikea','francfranc','カインズ',
+    '伊勢丹','isetan','三越','mitsukoshi','高島屋','takashimaya','大丸','daimaru',
+    '松坂屋','阪急百貨','阪神百貨','そごう','sogo','新光三越','太平洋sogo',
+    '101','atré','ecute','lumine',
+    // ── 快時尚服飾
+    'uniqlo','gu','zara','h&m','gap','forever21','urban outfitters',
+    'levi','nike','adidas','puma','new balance','converse','vans','skechers',
+    'abc mart','abc-mart',
+    // ── 美妝保養
+    '化妝品','保養品','護膚','彩妝','面膜','防曬','精華液','乳液','cc霜','bb霜',
+    '粉底','口紅','眼影','睫毛膏','卸妝','洗面乳','化妝水',
+    'sk-ii','sk2','蘭蔻','lancome','資生堂','shiseido','innisfree','etude',
+    'laneige','missha','some by mi','cosrx','kose','canmake','majolica',
+    '香水','perfume','jo malone','chanel','dior','givenchy','ysl',
+    '松本清','matsumoto kiyoshi','ウエルシア','welcia','ツルハ','tsuruha',
+    'sundrug','サンドラッグ','コスモス','cosmos','日藥本舖',
+    // ── 3C電器
+    '3c','電器','手機','iphone','android','samsung','pixel','小米','oppo',
+    '電腦','筆電','macbook','ipad','平板','airpods','耳機','充電器','行動電源',
+    '相機','sony','canon','nikon','fujifilm','mirrorless','單眼','鏡頭','記憶卡',
+    'switch','ps5','xbox','遊戲機','控制器',
+    // ── 書籍文具
+    '書','書店','文具','筆','手帳','notebook','日記本','貼紙','印章','筆記本',
+    '誠品','eslite','三省堂','丸善','紀伊國屋','kinokuniya',
+    '漫畫','manga','comic','雜誌','magazine','cd','dvd','黑膠','vinyl',
+    // ── 玩具雜貨
+    '玩具','扭蛋','ガチャ','gacha','公仔','手辦','模型','figure','lego','樂高',
+    // ── 伴手禮紀念品
+    '伴手禮','禮物','gift','souvenir','紀念品','土產','お土産','おみやげ','名產','特產',
+    // ── 線上購物
+    'amazon','蝦皮','shopee','momo','pchome','yahoo購物','樂天','rakuten',
+    '博客來','apple store','google play','app store',
+    // ── 衣物品項
+    '衣服','衣物','上衣','褲子','裙子','洋裝','外套','羽絨','風衣','大衣',
+    '鞋子','球鞋','皮鞋','涼鞋','拖鞋','靴子','包包','皮夾','錢包','手錶',
+    '眼鏡','太陽眼鏡','帽子','圍巾','手套','飾品','項鍊','耳環','戒指',
+    'outlet','暢貨中心','折扣','特賣','打折','優惠','促銷','clearance','store',
+  ],
+
+  '觀光': [
+    // ── 觀光動詞組合
+    '去神社','去寺廟','去博物館','去美術館','去動物園','去水族館','去公園',
+    '去城堡','參拜','拜訪','參觀','遊覽','觀光','遊玩','踏青','出遊',
+    '購票','買門票','訂票','預約','買入場券',
+
+    // ── 台灣景點
+    '台北101','象山','四獸山','貓空','烏來','陽明山','天母','北投','關渡','淡水',
+    '九份','菁桐','平溪','基隆','野柳','金山','石門','福隆','龜山島',
+    '宜蘭','礁溪','蘇澳','羅東','太平山','南方澳',
+    '花蓮','太魯閣','七星潭','賞鯨','秀林','天祥','池南',
+    '台東','知本','三仙台','小野柳','鹿野高台','伯朗大道','縱谷',
+    '日月潭','日月潭纜車','玄光寺','文武廟','集集','車埕',
+    '阿里山','嘉義','奮起湖','石卓','竹崎','水社寮',
+    '墾丁','鵝鑾鼻','龍磐','白沙灣','小灣','夏都','後壁湖',
+    '高雄','駁二','西子灣','旗津','蓮池潭','佛光山','美濃',
+    '台南','安平古堡','赤崁樓','孔廟','神農街','藍晒圖','林百貨',
+    '南投','清境','合歡山','廬山','埔里','鹿港','彰化',
+    '苗栗','三義','南庄','大湖','薰衣草森林',
+    '澎湖','馬公','通樑古榕','跨海大橋','吉貝','望安',
+    '金門','金城','古寧頭','太武山','貢糖','一條根',
+    '馬祖','南竿','北竿','芹壁','鐵堡',
+    '媽祖廟','龍山寺','行天宮','指南宮','劍潭','慈佑宮','大甲鎮瀾宮',
+    '故宮','台灣博物館','史前博物館','科學教育館','天文館','美術館',
+
+    // ── 神社寺廟
+    '神社','神宮','大社','稻荷','八幡','伊勢','明治','住吉','春日','金刀比羅',
+    '寺','寺院','禪寺','佛寺','廟','媽祖廟','龍山寺','行天宮','大稻埕',
+    'shrine','temple','jinja','tera','dera','senso',
+    // ── 城堡
+    '城','城堡','castle','天守','大阪城','名古屋城','熊本城','松本城',
+    '姬路城','彦根城','丸亀城','高知城','弘前城','會安','古城區',
+    // ── 博物館藝術
+    '博物館','museum','美術館','art museum','gallery','畫廊','展覽','exhibition',
+    '科學館','科技館','歷史館','自然史','蠟像館','madame tussauds',
+    '國立故宮','台灣歷史','海洋科技','兒童博物館',
+    '東京國立','大阪市立','京都國立','奈良國立',
+    // ── 公園自然
+    'park','公園','植物園','動物園','zoo','水族館','aquarium','海洋世界',
+    '國家公園','自然保護區','森林遊樂區','步道','登山','健行','hiking',
+    '太魯閣','玉山','雪霸','陽明山','墾丁','東北角','北海岸',
+    '富士山','箱根','日光','上高地','白川郷','合掌村',
+    '奈良公園','嵐山','哲學之道','金閣寺','銀閣寺','清水寺','伏見稻荷',
+    // ── 主題樂園
+    '遊樂園','theme park','樂園','迪士尼','disney','disneyland','disneysea',
+    '環球影城','universal','usj','富士急','富士Q','六福村','劍湖山','九族文化村',
+    '摩天輪','雲霄飛車','鬼屋','碰碰車',
+    // ── 知名景點
+    '淺草','浅草','雷門','仲見世','上野','秋葉原','新宿','涉谷','表參道',
+    '六本木','銀座','築地','豐洲','台場','お台場','odaiba',
+    '京都','清水','金閣','銀閣','龍安寺','二条城','伏見','祇園',
+    '大阪','道頓堀','心齋橋','難波','天王寺','通天閣',
+    '奈良','東大寺','春日大社','法隆寺',
+    '北海道','札幌','函館','旭川','小樽','富良野','美瑛',
+    '沖繩','那霸','美國村','國際通','首里城','美麗海水族館',
+    '台北101','象山','信義區','西門町','師大夜市','饒河','寧夏',
+    '日月潭','阿里山','花蓮','佳樂水','野柳','九份','平溪',
+    // ── 門票入場
+    '門票','ticket','入場券','入館費','入園費','admission','拝観料',
+    '入場','入館','入園','参拜','sightseeing','visit','tour','導覽',
+    // ── 體驗活動
+    '體驗','workshop','活動','行程','浴衣','和服','茶道','陶藝','染布',
+    '料理教室','cooking class','蕎麥體驗','漆器','藍染','金箔','西陣織',
+    '泡湯','溫泉','onsen','露天風呂','足湯','spa','岩盤浴',
+    '衝浪','滑雪','ski','snowboard','diving','潛水','浮潛',
+    '打卡','地標','景色','夕陽','日出',
+  ],
+
+  '住宿': [
+    // ── 住宿動詞組合
+    '住飯店','住旅館','住旅店','住民宿','住hostel','住青旅','check in','check out',
+    '入住','退房','早入住','延遲退房','訂房','預訂房間','booking','預約住宿',
+    // ── 住宿類型
+    '飯店','hotel','旅館','旅店','商務旅館','精品旅館','boutique hotel',
+    'hostel','青旅','青年旅館','背包客','dorm','多人房','私人房',
+    '民宿','b&b','bnb','guesthouse','airbnb','vrbo','民泊',
+    'ryokan','旅籠','溫泉旅館','割烹旅館','料理旅館','湯宿',
+    'inn','lodge','cabin','小屋','villa','別墅','resort','度假村',
+    'motel','汽車旅館','capsule hotel','膠囊旅館','カプセル',
+    // ── 訂房平台
+    'booking.com','agoda','expedia','hotels.com','trivago',
+    'trip.com','ctrip','一休','じゃらん','jalan','楽天トラベル','relux',
+    '雄獅','可樂旅遊','東南旅遊','燦星',
+    // ── 費用相關
+    '房費','住宿費','房租','含早','含稅','服務費','清潔費',
+    '一晚','二晚','三晚','住一晚','住兩晚','住三晚','週末','假日',
+    // ── 房型設施
+    '升等','upgrade','standard','deluxe','suite','行政房','景觀房',
+    '雙人房','單人房','家庭房','連通房','無障礙','禁菸',
+    'pool','游泳池','健身房','spa','三溫暖','sauna',
+  ],
+
+  '娛樂': [
+    // ── 娛樂動詞組合
+    '看電影','看演唱會','看show','看表演','看劇','打桌遊','玩遊戲','打電動',
+    '唱ktv','唱卡拉ok','去酒吧','去pub','去club','夾娃娃','打保齡球','去健身',
+    '去游泳','去溜冰','去爬岩','打羽球','打桌球','打撞球','玩密室逃脫',
+    '買演唱會票','買電影票','訂show票',
+    // ── 電影院
+    'movie','電影','cinema','影城','影院','戲院','威秀','國賓','in89','美麗華',
+    'imax','4dx','screenx','杜比','dolby','atmos','vip廳',
+    // ── 表演藝術
+    '演唱會','concert','live','show','表演','音樂會','歌舞伎','kabuki',
+    'opera','芭蕾','ballet','musical','音樂劇','百老匯','broadway','舞台劇',
+    '相聲','脫口秀','stand-up','comedy','落語','漫才','rakugo',
+    '偶像','idol','乃木坂','欅坂','日向坂','演場會','藝術節','festival','音樂祭','フェス',
+    // ── 遊戲電玩
+    'game','遊戲','電玩','手遊','switch','ps5','ps4','xbox','steam',
+    'arcade','ゲームセンター','ゲーセン','遊樂場','遊戲中心','game center',
+    '夾娃娃','抓娃娃','UFOキャッチャー','扭蛋','ガチャ','彈珠台','pinball',
+    'purikura','大頭貼','プリクラ','貼紙機','拍貼',
+    '桌遊','board game','桌上遊戲','劇本殺','誰是臥底',
+    '密室逃脫','escape room','謎解き','mystery','livegame',
+    // ── KTV夜生活
+    'ktv','卡拉ok','karaoke','カラオケ','big echo','shidax','ジャンカラ',
+    'bar','pub','酒吧','居酒屋','izakaya','club','nightclub','夜店','lounge',
+    '調酒','cocktail','whisky','威士忌','清酒','日本酒','燒酎','燒酒',
+    '生啤','精釀','craft beer','ipa','高球','highball','梅酒',
+    '小酌','喝酒','夜生活','night out',
+    // ── 休閒運動
+    '健身','gym','健身房','重訓','yoga','瑜伽','pilates','皮拉提斯',
+    '游泳','swimming','水上樂園','滑水道',
+    '撞球','billiard','桌球','ping pong','羽球','badminton',
+    '保齡球','bowling','室內攀岩','climbing','溜冰','ice skating','滑冰',
+    '高爾夫','golf','足球','籃球','棒球','網球','tennis',
+    '書店','誠品','tsutaya','蔦屋','紀伊國屋','三省堂','丸善',
+    '圖書館','漫畫喫茶','漫画喫茶','漫喫','インターネットカフェ',
+    '彩券','lottery','刮刮樂','lotto','pachinko','パチンコ',
+    '跳蚤市場','flea market','古著','二手','vintage','古物','骨董市',
+    '展覽','event','活動','文化節','market','手創市集',
+  ],
+
+  '醫療': [
+
+    // ── 台灣醫療
+    '台大醫院','台大','長庚','長庚醫院','馬偕','馬偕醫院','榮總','台北榮總',
+    '中國醫藥','中醫大','成大醫院','奇美','秀傳','彰基','童綜合',
+    '衛生所','健康中心','家醫科','一般科','內科門診',
+    '健保卡','健保','全民健保','自費','部分負擔','掛號費','門診費',
+    '藥局','屈臣氏藥局','康是美藥局','大樹藥局','躍獅','杏一',
+    '日藥本舖','台灣日藥','光南','科達','維康',
+    '預防針','流感疫苗','HPV','肺炎鏈球菌','腸病毒',
+
+    // ── 就醫動詞組合
+    '看醫生','看病','掛號','看診','急診','去診所','去醫院','去牙醫','去眼科',
+    '去皮膚科','去耳鼻喉','去婦科','去中醫','打針','接種疫苗','做健檢','買藥',
+    '拿藥','抽血','做pcr','快篩','驗尿','照X光','做超音波',
+    // ── 就醫場所
+    '醫院','hospital','診所','clinic','衛生所','醫療中心','急診室',
+    '牙醫','牙科','矯正','洗牙','填補','根管','拔牙','植牙','牙套',
+    '眼科','視力','配眼鏡','隱形眼鏡','驗光','散瞳',
+    '皮膚科','皮膚','除毛','雷射','痘痘','粉刺',
+    '耳鼻喉','鼻塞','中耳炎','扁桃腺','鼻炎',
+    '內科','腸胃','腸炎','腹瀉','便秘','腸胃鏡','大腸鏡','胃鏡',
+    '外科','整形','整骨','脊椎','骨折','韌帶','復健','物理治療',
+    '婦科','婦產科','產檢','子宮','乳房','乳癌篩檢',
+    '中醫','針灸','推拿','中藥','漢方','整骨院','接骨院','鍼灸院',
+    '醫生','doctor','看診','急診',
+    // ── 藥品藥局
+    '藥局','pharmacy','drugstore','dispensary',
+    '松本清','matsumoto kiyoshi','ウエルシア','welcia','サンドラッグ',
+    '日藥本舖','感冒藥','止痛藥','消炎藥','退燒藥','維他命',
+    '保健食品','葉黃素','魚油','益生菌','膠原蛋白','鈣片','鐵劑',
+    '腸胃藥','整腸劑','消化酵素','乳酸菌','正露丸','百保能','tylenol',
+    '眼藥水','鼻噴劑','口罩','酒精','消毒液','ok繃','紗布',
+    // ── 健檢保健
+    '健檢','健康檢查','抽血','尿液','x光','超音波','mri','電腦斷層',
+    '疫苗','打針','接種','covid','pcr','快篩','抗原','血壓','血糖',
+    '保險','健保','勞保','旅遊保險','海外醫療',
+    '醫療費','診療費','藥費','住院費','手術費','救護車',
+    '藥','medical','掛號費',
+  ],
+
+  '咖啡廳': [
+    // ── 動詞組合
+    '喝咖啡','去咖啡廳','去咖啡店','去喫茶店','點咖啡','買咖啡',
+    '吃蛋糕','吃甜點','吃鬆餅','吃可頌','吃布丁','下午茶約會',
+
+    // ── 台灣咖啡廳
+    '路易莎','louisa','路易莎咖啡','cama','cama café','伯朗','mr.brown',
+    '丹堤','dante','西雅圖','seattle','怡客','ikari','真鍋','mannercoffee',
+    '哈亞','haya','卡啡那','rufous','coffee stand',
+    '興波','sinbo','虎記','tiger sugar','不只是咖啡',
+    '台南咖啡','青田七六','好丘','小小書房',
+    '50嵐','清心','春水堂','珍煮漢','翡翠','初鹿','光泉',
+    '鮮奶茶','現做','手作','自製糖漿',
+
+    // ── 品牌
+    '星巴克','starbucks','路易莎','louisa','cama','伯朗','mr.brown','丹堤','dante',
+    '藍瓶','blue bottle','%arabica','arabica','philocoffea','猿田彥',
+    '% café','onibus','streamer','fuglen','nozy','glitch','bear pond',
+    'omotesando koffee','koffee mameya','カフェ・ド・ランブル',
+    '丸山珈琲','堀口珈琲','カルディ','kaldi','コメダ','komeda',
+    '珈琲館','上島','ucc','ドトール','doutor','ベローチェ','veloce',
+    'excelsior','タリーズ','tully','プロント','pronto',
+    // ── 類型
+    '咖啡廳','咖啡館','咖啡店','café','coffee shop','喫茶','喫茶店','純喫茶',
+    '貓咪咖啡廳','貓咖啡','owl café','兔子咖啡','刺蝟咖啡',
+    'work café','工作咖啡','共同工作','co-working',
+    // ── 咖啡飲品
+    '拿鐵','latte','cappuccino','americano','espresso','flat white',
+    '手沖','pour over','v60','chemex','aeropress','冰滴','cold brew',
+    '瑪奇朵','macchiato','摩卡','mocha','焦糖','caramel','榛果','hazelnut',
+    '鴛鴦','絲襪奶茶','港式奶茶','抹茶拿鐵','hojicha','焙茶','豆奶',
+    // ── 甜點糕點
+    '蛋糕','cake','塔','tart','磅蛋糕','pound','泡芙','puff',
+    '布丁','pudding','焦糖布丁','crème brûlée','提拉米蘇','tiramisu',
+    '馬卡龍','macaron','費南雪','financier','可麗露','canelé','達克瓦茲',
+    '千層','mille-feuille','舒芙蕾','soufflé',
+    '鬆餅','waffle','美式鬆餅','日式厚鬆餅','可麗餅','crepe',
+    '可頌','croissant','丹麥','danish','生吐司',
+    '芭菲','parfait','聖代','sundae','抹茶','霜淇淋','ソフトクリーム',
+    '銅鑼燒','dorayaki','草莓大福','和菓子','wagashi','羊羹','daifuku',
+    '甜點','dessert','bakery','パティスリー',
+  ],
+
+  '超市生鮮': [
+    // ── 採買動詞組合
+    '買菜','買食材','買生鮮','買水果','買零食','採買','囤貨','補貨',
+    '逛超市','去全聯','去家樂福','去好市多','去愛買','去大潤發',
+
+    // ── 台灣超市生鮮
+    '全聯','全聯超市','大潤發','愛買','家樂福','好市多','costco',
+    '主婦聯盟','棉花田','里仁','松青','惠康','頂好','wellcome',
+    '傳統市場','黃昏市場','早市','市場','果菜市場','魚市','肉攤','菜攤',
+    '有機蔬菜','有機','產銷履歷','台灣豬','國產','在地食材',
+    '滷味材料','火鍋料','湯底','高湯','甜辣醬','沙茶醬','豆腐乳',
+    '醬油膏','甜麵醬','辣椒醬','薑泥','蒜泥','九層塔','香菜','蔥',
+
+    // ── 台灣通路
+    '全聯','全聯福利中心','大潤發','愛買','家樂福','carrefour','好市多','costco',
+    '棉花田','主婦聯盟','有機','里仁','誠食','wellcome','頂好','惠康',
+    'jason','jasons','market place','city super','city\'super',
+    // ── 日本超市
+    'aeon','イオン','ito-yokado','イトーヨーカドー','西友','seiyu','ライフ','life',
+    'マルエツ','maruetsu','東急ストア','オーケー','ok store','業務用','業務スーパー',
+    'バロー','valor','ヤオコー','yaoko','サミット','summit','まいばすけっと',
+    'ベルク','belc','コープ','coop','生協',
+    // ── 便利店（生鮮品）
+    'lawson','ローソン','ファミリーマート','セブンイレブン',
+    // ── 生鮮品項
+    '生鮮','蔬菜','菜','水果','肉','豬肉','雞肉','牛肉','羊肉','排骨',
+    '海鮮','魚','蝦','蟹','花枝','透抽','貝類','蛤蜊','牡蠣',
+    '雞蛋','牛奶','鮮奶','豆漿','優格','起司','奶油','cheese','butter','yogurt',
+    '米','白米','糙米','麵粉','麵包','吐司','麵條','泡麵','instant noodle',
+    '調味料','醬油','味噌','味醂','料理酒','沙拉油','鹽','糖','胡椒','香料',
+    '冷凍食品','冷凍','冷藏','罐頭','醃漬物','泡菜','kimchi',
+    '零食','餅乾','洋芋片','巧克力','candy','糖果','口香糖','gum','餅乾',
+    // ── 生活用品
+    'grocery','groceries','生活用品','清潔用品','洗碗精','洗衣精','衛生紙',
+    '洗髮精','沐浴乳','牙膏','牙刷','棉花棒','衛生棉','生理用品','面紙',
+    '廚房','廚具','保鮮盒','保鮮膜','夾鏈袋','垃圾袋',
+  ],
+
+  '其他': [],
 };
 const CAT_GRAY = [
   'rgba(255,255,255,0.85)',
-  'rgba(255,255,255,0.70)',
-  'rgba(255,255,255,0.56)',
-  'rgba(255,255,255,0.44)',
-  'rgba(255,255,255,0.34)',
-  'rgba(255,255,255,0.26)',
+  'rgba(255,255,255,0.72)',
+  'rgba(255,255,255,0.60)',
+  'rgba(255,255,255,0.50)',
+  'rgba(255,255,255,0.40)',
+  'rgba(255,255,255,0.32)',
+  'rgba(255,255,255,0.24)',
   'rgba(255,255,255,0.18)',
-  'rgba(255,255,255,0.12)',
+  'rgba(255,255,255,0.13)',
+  'rgba(255,255,255,0.09)',
 ];
-const CAT_ABBR = { '餐飲':'F&B','交通':'TRN','購物':'SHP','觀光':'SIT','住宿':'HTL','娛樂':'ENT','醫療':'MED','其他':'ETC' };
+const CAT_ABBR = { '餐飲':'F&B','交通':'TRN','購物':'SHP','觀光':'SIT','住宿':'HTL','娛樂':'ENT','醫療':'MED','咖啡廳':'CAF','超市生鮮':'MKT','其他':'ETC' };
 
-let state = { twd:0, jpy:0, expenses:[] };
+let state = { twd:0, jpy:0, expenses:[], balanceHistory:[] };
+let currentRange = 'all';
+let tblSortCol = 'date'; let tblSortAsc = false;
+let tblSortCycle = { date: false, desc: true, cat: true, amount: false };
 let balCur = 'TWD', expCur = 'TWD';
+let travelMode = localStorage.getItem('travelMode') !== 'false'; // default: true (出國)
+let reportPeriod = 'year';  // year | month | week
+let reportOffset = 0;       // 0 = current, -1 = prev, etc.
+let customFrom = localStorage.getItem('customFrom') || '';
+let customTo   = localStorage.getItem('customTo')   || '';
 let pieChart = null, barChart = null;
 
 /* ── PERSIST ── */
@@ -726,37 +1966,92 @@ function catColor(cat) {
 }
 
 /* ── RENDER ── */
-function render() {
-  // balances
-  const twdEl = document.getElementById('twd-amount');
-  const jpyEl = document.getElementById('jpy-amount');
-  twdEl.textContent = fmt(state.twd);
-  jpyEl.textContent = fmt(state.jpy);
-  twdEl.className = 'balance-amount' + (state.twd < 0 ? ' negative' : '');
-  jpyEl.className = 'balance-amount' + (state.jpy < 0 ? ' negative' : '');
-  document.getElementById('twd-sub').textContent = `≈ ¥${fmt(Math.round(state.twd * TWD_JPY))}`;
-  document.getElementById('jpy-sub').textContent = `≈ NT$${fmt(Math.round(state.jpy / TWD_JPY))}`;
-
-  // overspend badges
-  ['twd-card','jpy-card'].forEach(id => {
-    const el = document.getElementById(id);
-    const existing = el.querySelector('.overspend-badge');
-    if (existing) existing.remove();
-    const bal = id==='twd-card' ? state.twd : state.jpy;
-    if (bal < 0) {
-      const b = document.createElement('div');
-      b.className = 'overspend-badge';
-      b.textContent = '超支';
-      el.appendChild(b);
-    }
+/* ── RANGE FILTER ── */
+function setRange(r) {
+  currentRange = r;
+  ['all','month','week','today','custom'].forEach(x => {
+    const el = document.getElementById('qr-'+x);
+    if (el) el.className = 'qr-btn' + (x===r ? ' active' : '');
   });
+  render();
+}
 
-  // summary
-  const totalTwd = state.expenses.reduce((s,e) => s + (e.cur==='TWD' ? e.amt : e.amt/TWD_JPY), 0);
-  const catSet = new Set(state.expenses.map(e => e.cat));
-  document.getElementById('sum-spent').textContent = 'NT$' + fmt(Math.round(totalTwd));
-  document.getElementById('sum-count').textContent = state.expenses.length;
-  document.getElementById('sum-cats').textContent = catSet.size;
+function saveCustomRange() {
+  customFrom = document.getElementById('custom-from')?.value || '';
+  customTo   = document.getElementById('custom-to')?.value   || '';
+  localStorage.setItem('customFrom', customFrom);
+  localStorage.setItem('customTo',   customTo);
+}
+
+function filterByRange(expenses) {
+  const today = localToday();
+  if (currentRange === 'all') return expenses;
+  if (currentRange === 'today') return expenses.filter(e => e.date === today);
+  if (currentRange === 'week') {
+    const d = new Date(); d.setHours(0,0,0,0);
+    const dow = d.getDay() === 0 ? 6 : d.getDay()-1;
+    d.setDate(d.getDate() - dow);
+    const weekStart = d.toISOString().split('T')[0];
+    return expenses.filter(e => e.date >= weekStart);
+  }
+  if (currentRange === 'month') {
+    const m = today.slice(0,7); // YYYY-MM
+    return expenses.filter(e => e.date.startsWith(m));
+  }
+  if (currentRange === 'custom') {
+    const f = customFrom || '0000-01-01';
+    const t = customTo   || '9999-12-31';
+    return expenses.filter(e => e.date >= f && e.date <= t);
+  }
+  return expenses;
+}
+
+function rangeDisplayLabel() {
+  const map = { all:'全部', month:'本月', week:'本週', today:'今天', custom:'自訂' };
+  return map[currentRange] || '全部';
+}
+
+function render() {
+  const filtered = filterByRange(state.expenses);
+  const rl = rangeDisplayLabel();
+
+  const twdSpent = filtered.filter(e=>e.cur==='TWD').reduce((s,e)=>s+e.amt,0);
+  const jpySpent = filtered.filter(e=>e.cur==='JPY').reduce((s,e)=>s+e.amt,0);
+  const twdEquivFromJpy = jpySpent / TWD_JPY;
+
+  // ── TWD card — big = balance, small = spent
+  const twdAmtEl = document.getElementById('twd-amount');
+  if (twdAmtEl) {
+    twdAmtEl.textContent = fmt(Math.abs(Math.round(state.twd)));
+    twdAmtEl.className = 'dash-card-main' + (state.twd < 0 ? ' negative' : '');
+  }
+  const el1 = document.getElementById('twd-range-label');   if(el1) el1.textContent = rl;
+  const twdSpentEl = document.getElementById('twd-spent');
+  if (twdSpentEl) twdSpentEl.textContent = 'NT$' + fmt(Math.round(twdSpent));
+  const el2 = document.getElementById('twd-spent-label');   if(el2) el2.textContent = rl + '花費';
+  const twdSubEl = document.getElementById('twd-sub');
+  if (twdSubEl) twdSubEl.textContent = travelMode ? `≈ ¥${fmt(Math.round(state.twd * TWD_JPY))}` : '國內模式';
+
+  // ── JPY card — big = balance, small = spent
+  const jpyAmtEl = document.getElementById('jpy-amount');
+  if (jpyAmtEl) {
+    jpyAmtEl.textContent = fmt(Math.abs(Math.round(state.jpy)));
+    jpyAmtEl.className = 'dash-card-main' + (state.jpy < 0 ? ' negative' : '');
+  }
+  const el3 = document.getElementById('jpy-range-label');   if(el3) el3.textContent = rl;
+  const jpySpentEl = document.getElementById('jpy-spent');
+  if (jpySpentEl) jpySpentEl.textContent = '¥' + fmt(Math.round(jpySpent));
+  const el4 = document.getElementById('jpy-spent-label');   if(el4) el4.textContent = rl + '花費';
+  const jpySubEl = document.getElementById('jpy-sub');
+  if (jpySubEl) jpySubEl.textContent = `≈ NT$${fmt(Math.round(state.jpy / TWD_JPY))}`;
+
+  // ── Summary bar
+  const catSet = new Set(filtered.map(e=>e.cat));
+  const avg = filtered.length ? (twdSpent + twdEquivFromJpy) / filtered.length : 0;
+  const sumCount = document.getElementById('sum-count'); if(sumCount) sumCount.textContent = filtered.length;
+  const sumCats  = document.getElementById('sum-cats');  if(sumCats)  sumCats.textContent  = catSet.size;
+  const sumAvg   = document.getElementById('sum-avg');   if(sumAvg)   sumAvg.textContent   = 'NT$'+fmt(Math.round(avg));
+  const sumLbl   = document.getElementById('sum-count-label'); if(sumLbl) sumLbl.textContent = rl + '筆數';
 
   renderList();
   renderCharts();
@@ -764,39 +2059,71 @@ function render() {
 
 function renderList() {
   const wrap = document.getElementById('expense-list-wrap');
-  if (state.expenses.length === 0) {
+  const filteredExp = filterByRange(state.expenses);
+  const filteredDep = filterByRange(state.balanceHistory || []);
+
+  if (filteredExp.length === 0 && filteredDep.length === 0) {
     wrap.innerHTML = `<div class="empty card">
       <div class="empty-icon">◌</div>
-      <p class="empty-title">尚無消費記錄</p>
-      <p class="empty-sub">點擊右下角「記一筆」開始</p>
+      <p class="empty-title">尚無記錄</p>
+      <p class="empty-sub">點擊右下角「記一筆」或「儲值」開始</p>
     </div>`;
     return;
   }
 
+  // Merge all entries by date, tag type
   const byDate = {};
-  state.expenses.forEach(e => { (byDate[e.date] = byDate[e.date]||[]).push(e); });
+  filteredExp.forEach(e => {
+    const d = e.date; (byDate[d] = byDate[d]||[]).push({ _type:'expense', ...e });
+  });
+  filteredDep.forEach(h => {
+    const d = h.date; (byDate[d] = byDate[d]||[]).push({ _type:'deposit', ...h });
+  });
+
   const sorted = Object.entries(byDate).sort(([a],[b]) => b.localeCompare(a));
 
-  wrap.innerHTML = sorted.map(([date, items]) => `
-    <div class="date-group">
-      <p class="date-label">${fmtDate(date)}</p>
-      <div class="expense-list card">
-        ${items.map(e => `
-          <div class="expense-row">
-            <div class="cat-icon">${CAT_ABBR[e.cat]||'ETC'}</div>
-            <div class="expense-info">
-              <div class="expense-desc">${escHtml(e.desc)}</div>
-              <div class="expense-cat">${e.cat}</div>
-            </div>
-            <div class="expense-amount">
-              <div class="expense-main">${e.cur==='TWD'?'NT$':'¥'}${fmt(e.amt)}</div>
-              <div class="expense-conv">${e.cur==='TWD'?`≈¥${fmt(Math.round(e.amt*TWD_JPY))}`:` ≈NT$${fmt(Math.round(e.amt/TWD_JPY))}`}</div>
-            </div>
+  wrap.innerHTML = sorted.map(([date, items]) => {
+    // sort: deposits first within a day, then expenses by insert order
+    items.sort((a,b) => (a._type==='deposit'?0:1) - (b._type==='deposit'?0:1));
+
+    const rows = items.map(item => {
+      if (item._type === 'deposit') {
+        const cur = item.cur.toLowerCase();
+        const sym = item.cur==='TWD' ? 'NT$' : '¥';
+        const conv = item.cur==='TWD'
+          ? `≈ ¥${fmt(Math.round(item.amt * TWD_JPY))}`
+          : `≈ NT$${fmt(Math.round(item.amt / TWD_JPY))}`;
+        return `<div class="deposit-row">
+          <div class="deposit-icon ${cur}">${item.cur}</div>
+          <div class="deposit-info">
+            <div class="deposit-title">儲值</div>
+            <div class="deposit-type">DEPOSIT</div>
           </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
+          <div class="deposit-amount">
+            <div class="deposit-main ${cur}">+${sym}${fmt(item.amt)}</div>
+            <div class="deposit-conv">${conv}</div>
+          </div>
+        </div>`;
+      } else {
+        return `<div class="expense-row">
+          <div class="cat-icon">${CAT_ABBR[item.cat]||'ETC'}</div>
+          <div class="expense-info">
+            <div class="expense-desc">${escHtml(item.desc)}</div>
+            <div class="expense-cat">${item.cat}</div>
+          </div>
+          <div class="expense-amount">
+            <div class="expense-main">${item.cur==='TWD'?'NT$':'¥'}${fmt(item.amt)}</div>
+            <div class="expense-conv">${item.cur==='TWD'?`≈¥${fmt(Math.round(item.amt*TWD_JPY))}`:` ≈NT$${fmt(Math.round(item.amt/TWD_JPY))}`}</div>
+          </div>
+        </div>`;
+      }
+    }).join('');
+
+    return `<div class="date-group">
+      <p class="date-label">${fmtDate(date)}</p>
+      <div class="expense-list card">${rows}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderCharts() {
@@ -1029,12 +2356,14 @@ function openModal(name) {
     document.getElementById('cat-hint').textContent = '';
     document.getElementById('exp-amt').value = '';
     document.getElementById('exp-desc').value = '';
+    updateCurSliderUI();
+    pickCat(null); // reset to auto
   } else {
     document.getElementById('bal-amt').value = '';
   }
   document.getElementById('modal-'+name).style.display = 'flex';
   setTimeout(() => {
-    if (name==='expense') document.getElementById('exp-amt').focus();
+    if (name==='expense') { document.getElementById('exp-amt').focus(); document.getElementById('exp-amt').select(); }
     else document.getElementById('bal-amt').focus();
   }, 350);
 }
@@ -1049,23 +2378,365 @@ function setCur(form, cur) {
     document.getElementById('bal-jpy').className = 'cur-btn' + (cur==='JPY'?' active':'');
   } else {
     expCur = cur;
-    document.getElementById('exp-twd').className = 'cur-btn' + (cur==='TWD'?' active':'');
-    document.getElementById('exp-jpy').className = 'cur-btn' + (cur==='JPY'?' active':'');
     document.getElementById('cat-hint').textContent = '';
+    updateCurSliderUI();
   }
 }
 
 /* ── CAT HINT ── */
 function updateCatHint() {
   const desc = document.getElementById('exp-desc').value;
-  document.getElementById('cat-hint').textContent = desc ? autocat(desc) : '';
+  const el   = document.getElementById('cat-hint');
+  if (el) el.textContent = selectedCat ? selectedCat : (desc ? autocat(desc) : '');
+}
+
+
+/* ── CURRENCY SLIDER TOGGLE ── */
+function toggleCurSlider() {
+  const newCur = expCur === 'TWD' ? 'JPY' : 'TWD';
+  setCur('exp', newCur);
+}
+
+function initSlider() {
+  updateCurSliderUI();
+}
+
+function updateCurSliderUI() {
+  const knob = document.getElementById('cur-slide-knob');
+  const optTwd = document.getElementById('cs-twd');
+  const optJpy = document.getElementById('cs-jpy');
+  const sym  = document.getElementById('amt-sym');
+  if (!knob) return;
+  if (expCur === 'JPY') {
+    knob.className = 'cur-slide-knob jpy';
+    if (optTwd) optTwd.className = 'cur-slide-opt';
+    if (optJpy) optJpy.className = 'cur-slide-opt on';
+    if (sym)   sym.textContent = '¥';
+  } else {
+    knob.className = 'cur-slide-knob';
+    if (optTwd) optTwd.className = 'cur-slide-opt on';
+    if (optJpy) optJpy.className = 'cur-slide-opt';
+    if (sym)   sym.textContent = 'NT$';
+  }
+}
+
+/* ── TABLE ── */
+function renderTable() {
+  const search = (document.getElementById('tbl-search')?.value || '').toLowerCase();
+  let rows = filterByRange(state.expenses).filter(e =>
+    e.desc.toLowerCase().includes(search) || e.cat.toLowerCase().includes(search)
+  );
+  rows = [...rows].sort((a,b) => {
+    let va, vb;
+    if (tblSortCol==='date')   { va=a.date; vb=b.date; }
+    else if (tblSortCol==='desc')   { va=a.desc; vb=b.desc; }
+    else if (tblSortCol==='cat')    { va=a.cat;  vb=b.cat;  }
+    else if (tblSortCol==='amount') {
+      va = a.cur==='TWD'?a.amt:a.amt/TWD_JPY;
+      vb = b.cur==='TWD'?b.amt:b.amt/TWD_JPY;
+    }
+    if (va < vb) return tblSortAsc ? -1 : 1;
+    if (va > vb) return tblSortAsc ? 1 : -1;
+    return 0;
+  });
+
+  const total = rows.reduce((s,e)=>s+(e.cur==='TWD'?e.amt:e.amt/TWD_JPY),0);
+  const avg = rows.length ? total/rows.length : 0;
+  document.getElementById('tbl-total').textContent = 'NT$'+fmt(Math.round(total));
+  document.getElementById('tbl-count').textContent = rows.length;
+  document.getElementById('tbl-avg').textContent   = 'NT$'+fmt(Math.round(avg));
+
+  // sort chips
+  ['date','amount','cat','desc'].forEach(c => {
+    const el = document.getElementById('sc-'+c);
+    if (el) el.className = 'tbl-sort-chip' + (c===tblSortCol?' active':'');
+  });
+
+  const body = document.getElementById('tbl-body');
+  if (!rows.length) {
+    body.innerHTML = '<p class="tbl-empty">無符合記錄</p>';
+    return;
+  }
+  body.innerHTML = rows.map(e => {
+    const sym  = e.cur==='TWD' ? 'NT$' : '¥';
+    const conv = e.cur==='TWD'
+      ? `≈¥${fmt(Math.round(e.amt*TWD_JPY))}`
+      : `≈NT$${fmt(Math.round(e.amt/TWD_JPY))}`;
+    const d = new Date(e.date+'T00:00:00');
+    const mo = d.getMonth()+1, dy = d.getDate();
+    const dateStr = `${mo}/${dy}`;
+    const icon = e.source==='scan' ? 'scan' : e.cur.toLowerCase();
+    const iconTxt = e.source==='scan' ? 'SCN' : (CAT_ABBR[e.cat]||'ETC');
+    return `<div class="tbl-card">
+      <div class="tbl-card-icon ${icon}">${iconTxt}</div>
+      <div class="tbl-card-body">
+        <div class="tbl-card-desc">${escHtml(e.desc)}</div>
+        <div class="tbl-card-meta">
+          <span class="tbl-card-date">${dateStr}</span>
+          <span class="tbl-card-sep">·</span>
+          <span class="tbl-card-cat">${e.cat}</span>
+        </div>
+      </div>
+      <div class="tbl-card-right" style="flex-shrink:0;min-width:70px">
+        <div class="tbl-card-amt">${sym}${fmt(e.amt)}</div>
+        <div class="tbl-card-conv">${conv}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function sortTable(col) {
+  if (tblSortCol===col) tblSortAsc = !tblSortAsc;
+  else { tblSortCol=col; tblSortAsc=tblSortCycle[col]; }
+  renderTable();
+}
+
+function toggleTableSort() {
+  const cols = ['date','amount','cat'];
+  tblSortCol = cols[(cols.indexOf(tblSortCol)+1)%cols.length];
+  tblSortAsc = false;
+  renderTable();
+}
+
+/* ══════════════════════════════════════
+   SCAN — Taiwan E-Invoice QR Code
+══════════════════════════════════════ */
+let scanStream = null;
+let scanTimer  = null;
+let scanParsed = null;
+
+function openScanModal() {
+  scanParsed = null;
+  document.getElementById('modal-scan').style.display = 'flex';
+  document.getElementById('scan-phase-cam').style.display = 'block';
+  document.getElementById('scan-phase-confirm').style.display = 'none';
+  document.getElementById('scan-phase-sub').textContent = '對準發票左側 QR Code 自動讀取';
+  document.getElementById('scan-status').textContent = '正在啟動相機...';
+  startCamera();
+}
+
+function closeScanModal() {
+  stopCamera();
+  document.getElementById('modal-scan').style.display = 'none';
+}
+
+function resetScan() {
+  scanParsed = null;
+  document.getElementById('scan-phase-cam').style.display = 'block';
+  document.getElementById('scan-phase-confirm').style.display = 'none';
+  document.getElementById('scan-phase-sub').textContent = '對準發票左側 QR Code 自動讀取';
+  document.getElementById('scan-status').textContent = '對準 QR Code 自動讀取';
+  startScanning();
+}
+
+async function startCamera() {
+  try {
+    stopCamera();
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode:'environment', width:{ideal:1280}, height:{ideal:720} }
+    });
+    scanStream = stream;
+    const video = document.getElementById('scan-video');
+    video.srcObject = stream;
+    await video.play();
+    document.getElementById('scan-status').textContent = '對準 QR Code 自動讀取';
+    startScanning();
+  } catch(e) {
+    document.getElementById('scan-status').textContent = '無法開啟相機：' + (e.message||'請確認已授權相機');
+  }
+}
+
+function stopCamera() {
+  if (scanTimer) { clearInterval(scanTimer); scanTimer=null; }
+  if (scanStream) { scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; }
+}
+
+function startScanning() {
+  if (scanTimer) clearInterval(scanTimer);
+  // Try BarcodeDetector first (Chrome/Safari 17+)
+  if ('BarcodeDetector' in window) {
+    const detector = new BarcodeDetector({ formats:['qr_code','code_128','code_39'] });
+    const video = document.getElementById('scan-video');
+    scanTimer = setInterval(async () => {
+      if (video.readyState < 2) return;
+      try {
+        const codes = await detector.detect(video);
+        if (codes.length > 0) {
+          const raw = codes[0].rawValue;
+          handleScanResult(raw);
+        }
+      } catch(e) {}
+    }, 400);
+  } else {
+    // Canvas fallback — manual frame grab + jsQR if loaded, else prompt manual
+    document.getElementById('scan-status').textContent = '此瀏覽器不支援自動掃描，請手動輸入發票號碼';
+    showManualInput();
+  }
+}
+
+function handleScanResult(raw) {
+  if (!raw || scanParsed) return;
+  clearInterval(scanTimer); scanTimer = null;
+
+  // Try Taiwan E-Invoice QR (Left QR format)
+  const parsed = parseTWInvoiceQR(raw);
+  if (parsed) {
+    scanParsed = parsed;
+    showScanResult(parsed);
+    return;
+  }
+
+  // Try mobile carrier barcode (starts with / and 7 chars, or B: prefix)
+  if (/^\/[A-Z0-9+.]{7}$/.test(raw.trim()) || raw.startsWith('B:')) {
+    document.getElementById('scan-status').textContent = '已讀取載具條碼，請手動輸入金額';
+    document.getElementById('scan-result-preview').style.display = 'block';
+    document.getElementById('sr-inv').textContent = raw.trim();
+    document.getElementById('sr-date').textContent = localToday();
+    document.getElementById('sr-amt').textContent = '請輸入';
+    document.getElementById('sr-seller').textContent = '—';
+    scanParsed = { invNo:raw.trim(), date:localToday(), amt:0, seller:'', isCarrier:true };
+    document.getElementById('scan-import-btn').style.display = 'block';
+    document.getElementById('scan-retry-btn').style.display = 'block';
+    return;
+  }
+
+  // Unknown QR — show raw
+  document.getElementById('scan-status').textContent = '無法辨識，請重試';
+  document.getElementById('scan-retry-btn').style.display = 'block';
+}
+
+/* Taiwan E-Invoice left QR code parser
+   Format: invNo(10) + date(7,ROC) + random(4) + salesHex(8) + totalHex(8) + buyerId(8) + sellerId(8) + ... */
+function parseTWInvoiceQR(raw) {
+  if (!raw || raw.length < 54) return null;
+  try {
+    const invNo   = raw.substring(0,10);   // e.g. AB12345678
+    const rocDate = raw.substring(10,17);  // e.g. 1130315
+    const random  = raw.substring(17,21);
+    const salesHex= raw.substring(21,29);
+    const totalHex= raw.substring(29,37);
+    const buyerId = raw.substring(37,45);
+    const sellerId= raw.substring(45,53);
+
+    // validate invoice number format (2 uppercase + 8 digits)
+    if (!/^[A-Z]{2}\d{8}$/.test(invNo)) return null;
+    // validate ROC date (7 digits)
+    if (!/^\d{7}$/.test(rocDate)) return null;
+
+    const totalAmt = parseInt(totalHex, 16);
+    if (isNaN(totalAmt) || totalAmt <= 0) return null;
+
+    // Convert ROC date to Gregorian
+    const rocYear = parseInt(rocDate.substring(0,3));
+    const month   = rocDate.substring(3,5);
+    const day     = rocDate.substring(5,7);
+    const adYear  = rocYear + 1911;
+    const dateStr = `${adYear}-${month}-${day}`;
+
+    return { invNo, date:dateStr, amt:totalAmt, seller:sellerId, buyerId, random };
+  } catch(e) { return null; }
+}
+
+function showScanResult(p) {
+  stopCamera();
+  document.getElementById('scan-phase-cam').style.display = 'none';
+  document.getElementById('scan-phase-confirm').style.display = 'block';
+  document.getElementById('scan-phase-sub').textContent = '確認資料後直接入帳';
+  document.getElementById('sr-inv').textContent    = p.invNo || '—';
+  document.getElementById('sr-date').textContent   = p.date  || localToday();
+  document.getElementById('sr-amt').textContent    = p.amt > 0 ? fmt(p.amt) : '請輸入';
+  document.getElementById('sr-seller').textContent = p.seller || '—';
+  // pre-fill editable fields
+  const amtInp  = document.getElementById('scan-amt-input');
+  const descInp = document.getElementById('scan-desc-input');
+  if (amtInp)  amtInp.value  = p.amt > 0 ? p.amt : '';
+  if (descInp) {
+    descInp.value = p.isCarrier
+      ? '發票 ' + (p.invNo||'')
+      : '發票 ' + (p.invNo||'') + (p.seller ? ' — ' + p.seller : '');
+    updateScanCatHint();
+  }
+  setTimeout(() => { if(amtInp) amtInp.focus(); }, 200);
+}
+
+function updateScanCatHint() {
+  const desc = document.getElementById('scan-desc-input')?.value || '';
+  const el   = document.getElementById('scan-cat-hint');
+  if (el) el.textContent = desc ? autocat(desc) : '';
+}
+
+function showManualInput() {
+  // BarcodeDetector not supported — show manual confirm phase
+  stopCamera();
+  document.getElementById('scan-phase-cam').style.display = 'none';
+  document.getElementById('scan-phase-confirm').style.display = 'block';
+  document.getElementById('scan-phase-sub').textContent = '手動輸入發票資料';
+  document.getElementById('sr-inv').textContent    = '—';
+  document.getElementById('sr-date').textContent   = localToday();
+  document.getElementById('sr-amt').textContent    = '請輸入';
+  document.getElementById('sr-seller').textContent = '—';
+  const amtInp  = document.getElementById('scan-amt-input');
+  const descInp = document.getElementById('scan-desc-input');
+  if (amtInp)  amtInp.value  = '';
+  if (descInp) descInp.value = '';
+  scanParsed = { invNo:'', date:localToday(), amt:0, seller:'' };
+  setTimeout(() => { if(amtInp) amtInp.focus(); }, 200);
+}
+
+function confirmScanImport() {
+  const amtVal  = parseFloat(document.getElementById('scan-amt-input')?.value);
+  const descVal = (document.getElementById('scan-desc-input')?.value || '').trim();
+  const dateVal = (scanParsed?.date) || localToday();
+
+  if (isNaN(amtVal) || amtVal <= 0) { alert('請輸入有效金額'); return; }
+  if (!descVal) { alert('請輸入消費描述'); return; }
+
+  const cat = autocat(descVal);
+  // Add directly to state — shows up in dashboard, list, charts, table, report
+  state.expenses.unshift({ id:Date.now(), amt:amtVal, cur:'TWD', desc:descVal, cat, date:dateVal, source:'scan' });
+  state.twd -= amtVal;
+  save();
+  render();
+  closeScanModal();
+  switchTab('list'); // jump to list to see new entry
+  showToast('已加入 — ' + cat);
+}
+
+/* ── BALANCE HISTORY ── */
+function openBalanceHistory() {
+  const hist = state.balanceHistory || [];
+  document.getElementById('hist-sub').textContent = `共 ${hist.length} 筆`;
+  const listEl = document.getElementById('hist-list');
+  if (!hist.length) {
+    listEl.innerHTML = '<p style="text-align:center;padding:32px;color:rgba(255,255,255,0.25);font-size:13px">尚無儲值紀錄</p>';
+  } else {
+    listEl.innerHTML = '<div class="card" style="border-radius:16px;overflow:hidden">' +
+      hist.map(h => {
+        const d = new Date(h.date+'T00:00:00');
+        const dateStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+        const sym = h.cur==='TWD'?'NT$':'¥';
+        return `<div class="hist-row">
+          <div class="hist-icon ${h.cur.toLowerCase()}">${h.cur}</div>
+          <div class="hist-body">
+            <div class="hist-title">儲值</div>
+            <div class="hist-date">${dateStr}</div>
+          </div>
+          <div class="hist-amount">+${sym}${h.amt.toLocaleString()}</div>
+        </div>`;
+      }).join('') + '</div>';
+  }
+  document.getElementById('modal-hist').style.display = 'flex';
 }
 
 /* ── ACTIONS ── */
 function addBalance() {
-  const n = parseFloat(document.getElementById('bal-amt').value);
+  const n    = parseFloat(document.getElementById('bal-amt').value);
+  const note = (document.getElementById('bal-note')?.value || '').trim();
   if (isNaN(n) || n <= 0) return;
   if (balCur==='TWD') state.twd += n; else state.jpy += n;
+  state.balanceHistory = state.balanceHistory || [];
+  state.balanceHistory.unshift({ id:Date.now(), amt:n, cur:balCur, date:localToday(), ts:Date.now(), note });
+  document.getElementById('bal-note').value = '';
   save(); render(); closeModal('modal-balance');
 }
 
@@ -1075,7 +2746,7 @@ function addExpense() {
   const date = document.getElementById('exp-date').value || localToday();
   if (isNaN(n) || n <= 0) { alert('請輸入有效金額'); return; }
   if (!desc) { alert('請輸入消費描述'); return; }
-  const cat = autocat(desc);
+  const cat = selectedCat || autocat(desc);
   state.expenses.unshift({ id: Date.now(), amt: n, cur: expCur, desc, cat, date });
   if (expCur==='TWD') state.twd -= n; else state.jpy -= n;
   save(); render(); closeModal('modal-expense');
@@ -1083,16 +2754,26 @@ function addExpense() {
 
 /* ── TAB ── */
 function switchTab(t) {
-  document.getElementById('view-list').style.display     = t==='list'     ? 'block' : 'none';
-  document.getElementById('view-chart').style.display    = t==='chart'    ? 'flex'  : 'none';
-  document.getElementById('view-settings').style.display = t==='settings' ? 'block' : 'none';
-  document.getElementById('tab-list').className     = 'tab-btn' + (t==='list'     ? ' active' : '');
-  document.getElementById('tab-chart').className    = 'tab-btn' + (t==='chart'    ? ' active' : '');
-  document.getElementById('tab-settings').className = 'tab-btn' + (t==='settings' ? ' active' : '');
-  // FAB: hide on settings tab
-  document.getElementById('main-fab').style.display = t==='settings' ? 'none' : 'flex';
+  ['list','chart','table','report','settings'].forEach(v => {
+    const el = document.getElementById('view-'+v);
+    if (el) el.style.display = 'none';
+    const btn = document.getElementById('tab-'+v);
+    if (btn) btn.className = 'bn-tab';
+  });
+  const viewEl = document.getElementById('view-'+t);
+  if (viewEl) viewEl.style.display = (t==='chart') ? 'flex' : 'block';
+  const tabEl = document.getElementById('tab-'+t);
+  if (tabEl) tabEl.className = 'bn-tab active';
+  // range row: show only on list/chart/table
+  const rangeRow = document.getElementById('bn-range-row');
+  if (rangeRow) rangeRow.style.display = (t==='settings'||t==='report') ? 'none' : 'flex';
+  // hide full dashboard on settings
+  const dash = document.getElementById('dashboard-area');
+  if (dash) dash.style.display = t==='settings' ? 'none' : '';
   if (t==='chart') renderCharts();
   if (t==='settings') renderSettingsInfo();
+  if (t==='table') renderTable();
+  if (t==='report') renderReport();
 }
 
 /* ── HTML ESCAPE ── */
@@ -1204,12 +2885,597 @@ function renderSettingsInfo() {
   const el2 = document.getElementById('settings-last-update');
   if (el) el.textContent = size;
   if (el2) el2.textContent = last;
+  initRateInput();
+}
+
+
+/* ── TRAVEL / DOMESTIC MODE ── */
+function toggleTravelMode() {
+  travelMode = !travelMode;
+  localStorage.setItem('travelMode', travelMode);
+  applyMode();
+  render();
+}
+
+function applyMode() {
+  const grid      = document.querySelector('.balance-grid');
+  const jpyCard   = document.getElementById('jpy-card');
+  const badge     = document.getElementById('mode-badge');
+  const badgeTxt  = document.getElementById('mode-badge-text');
+  const swTrack   = document.getElementById('sw-track');
+  const swTitle   = document.getElementById('mode-sw-title');
+  const swSub     = document.getElementById('mode-sw-sub');
+  const title     = document.getElementById('header-title');
+  const curSlide  = document.getElementById('cur-slide-btn');
+  const hdrBtn    = document.getElementById('mode-toggle-btn');
+  const hdrBtnTxt = document.getElementById('mode-toggle-txt');
+
+  if (travelMode) {
+    if (grid)       grid.classList.remove('domestic');
+    if (jpyCard)    jpyCard.style.display = '';
+    if (badge)      { badge.className = 'mode-badge travel'; badgeTxt.textContent = '出國模式'; }
+    if (swTrack)    swTrack.className = 'ios-switch-track on';
+    if (swTitle)    swTitle.textContent = '出國模式';
+    if (swSub)      swSub.textContent = '顯示台幣與日幣雙幣別';
+    if (title)      title.innerHTML = '資產 <strong>總覽</strong>';
+    if (curSlide)   curSlide.style.display = '';
+    if (hdrBtn)     { hdrBtn.className = 'mode-toggle-btn'; hdrBtnTxt.textContent = '出國'; }
+  } else {
+    if (grid)       grid.classList.add('domestic');
+    if (jpyCard)    jpyCard.style.display = 'none';
+    if (badge)      { badge.className = 'mode-badge domestic'; badgeTxt.textContent = '國內模式'; }
+    if (swTrack)    swTrack.className = 'ios-switch-track';
+    if (swTitle)    swTitle.textContent = '國內模式';
+    if (swSub)      swSub.textContent = '僅顯示新台幣，隱藏日幣';
+    if (title)      title.innerHTML = '台幣 <strong>記帳</strong>';
+    if (curSlide)   curSlide.style.display = 'none';
+    expCur = 'TWD'; updateCurSliderUI();
+    if (hdrBtn)     { hdrBtn.className = 'mode-toggle-btn domestic'; hdrBtnTxt.textContent = '國內'; }
+  }
+}
+
+
+/* ══════════════════════════════════════
+   REPORT — Year / Month / Week
+══════════════════════════════════════ */
+function setReportPeriod(p) {
+  reportPeriod = p; reportOffset = 0;
+  ['year','month','week'].forEach(x => {
+    const el = document.getElementById('rpt-'+x);
+    if (el) el.className = 'rp-tab' + (x===p ? ' active' : '');
+  });
+  renderReport();
+}
+
+function reportStep(dir) {
+  reportOffset += dir;
+  renderReport();
+}
+
+function getReportWindow() {
+  const now = new Date();
+  let start, end, label, subGroups;
+
+  if (reportPeriod === 'year') {
+    const yr = now.getFullYear() + reportOffset;
+    start = `${yr}-01-01`; end = `${yr}-12-31`;
+    label = `${yr} 年`;
+    // sub-groups: each month
+    subGroups = Array.from({length:12},(_,i)=>{
+      const m = String(i+1).padStart(2,'0');
+      return { key:`${yr}-${m}`, label:`${i+1}月`, from:`${yr}-${m}-01`, to:`${yr}-${m}-31` };
+    });
+  } else if (reportPeriod === 'month') {
+    const d = new Date(now.getFullYear(), now.getMonth() + reportOffset, 1);
+    const yr = d.getFullYear(), mo = d.getMonth();
+    start = `${yr}-${String(mo+1).padStart(2,'0')}-01`;
+    const lastDay = new Date(yr, mo+1, 0).getDate();
+    end   = `${yr}-${String(mo+1).padStart(2,'0')}-${lastDay}`;
+    label = `${yr}年 ${mo+1}月`;
+    // sub-groups: each week in month
+    subGroups = [];
+    let cur = new Date(yr, mo, 1);
+    let wn = 1;
+    while (cur.getFullYear()===yr && cur.getMonth()===mo) {
+      const wStart = new Date(cur);
+      const wEnd = new Date(cur); wEnd.setDate(wEnd.getDate()+6);
+      if (wEnd.getMonth() !== mo || wEnd.getFullYear() !== yr) { wEnd.setDate(new Date(yr,mo+1,0).getDate()); wEnd.setMonth(mo); }
+      const fmtD = d => `${d.getMonth()+1}/${d.getDate()}`;
+      subGroups.push({
+        key:`W${wn}`, label:`第${wn}週`,
+        from:wStart.toISOString().split('T')[0],
+        to:wEnd.toISOString().split('T')[0]
+      });
+      cur.setDate(cur.getDate()+7); wn++;
+    }
+  } else { // week
+    const d = new Date(now);
+    const dow = d.getDay()===0 ? 6 : d.getDay()-1;
+    d.setDate(d.getDate() - dow + reportOffset*7);
+    const wStart = new Date(d);
+    const wEnd = new Date(d); wEnd.setDate(wEnd.getDate()+6);
+    start = wStart.toISOString().split('T')[0];
+    end   = wEnd.toISOString().split('T')[0];
+    const m1 = wStart.getMonth()+1, m2 = wEnd.getMonth()+1;
+    label = `${m1}/${wStart.getDate()} — ${m2}/${wEnd.getDate()}`;
+    // sub-groups: each day
+    subGroups = [];
+    const DAY_NAMES = ['日','一','二','三','四','五','六'];
+    for (let i=0;i<7;i++) {
+      const dd = new Date(wStart); dd.setDate(dd.getDate()+i);
+      const ds = dd.toISOString().split('T')[0];
+      subGroups.push({ key:ds, label:`週${DAY_NAMES[dd.getDay()]} ${dd.getMonth()+1}/${dd.getDate()}`, from:ds, to:ds });
+    }
+  }
+  return { start, end, label, subGroups };
+}
+
+function renderReport() {
+  const { start, end, label, subGroups } = getReportWindow();
+  document.getElementById('rp-label').textContent = label;
+
+  // filter to window
+  const inWindow = state.expenses.filter(e => e.date >= start && e.date <= end);
+  const toTwd = e => e.cur==='TWD' ? e.amt : e.amt/TWD_JPY;
+  const totalTwd = inWindow.reduce((s,e)=>s+toTwd(e),0);
+
+  // which sub-groups have data
+  const activeSubs = subGroups.filter(sg => inWindow.some(e=>e.date>=sg.from&&e.date<=sg.to));
+  const avg = activeSubs.length ? totalTwd/activeSubs.length : 0;
+
+  document.getElementById('rp-total').textContent = 'NT$'+fmt(Math.round(totalTwd));
+  document.getElementById('rp-count').textContent = inWindow.length;
+  document.getElementById('rp-avg').textContent   = 'NT$'+fmt(Math.round(avg));
+
+  const maxAmt = Math.max(...subGroups.map(sg=>
+    inWindow.filter(e=>e.date>=sg.from&&e.date<=sg.to).reduce((s,e)=>s+toTwd(e),0)
+  ), 1);
+
+  const CAT_COLORS_RP = {
+    '餐飲':'rgba(255,255,255,0.8)','交通':'rgba(255,255,255,0.65)',
+    '購物':'rgba(255,255,255,0.55)','觀光':'rgba(255,255,255,0.47)',
+    '住宿':'rgba(255,255,255,0.40)','娛樂':'rgba(255,255,255,0.34)',
+    '醫療':'rgba(255,255,255,0.28)','咖啡廳':'rgba(255,255,255,0.22)',
+    '超市生鮮':'rgba(255,255,255,0.17)','其他':'rgba(255,255,255,0.12)',
+  };
+
+  const wrap = document.getElementById('rp-rows');
+  if (!inWindow.length) {
+    wrap.innerHTML = '<p class="rp-empty">此期間無消費記錄</p>';
+    return;
+  }
+
+  wrap.innerHTML = subGroups.map((sg,idx) => {
+    const exps = inWindow.filter(e=>e.date>=sg.from&&e.date<=sg.to);
+    if (!exps.length) return '';
+    const amt = exps.reduce((s,e)=>s+toTwd(e),0);
+    const pct = Math.round(amt/maxAmt*100);
+    const cats = {};
+    exps.forEach(e=>{ cats[e.cat]=(cats[e.cat]||0)+toTwd(e); });
+    const topCat = Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+    const catRows = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,v])=>{
+      const cp = Math.round(v/amt*100);
+      return `<div class="rp-detail-item">
+        <span class="rp-detail-cat">${cat}</span>
+        <div class="rp-detail-bar-wrap"><div class="rp-detail-bar" style="width:${cp}%;background:${CAT_COLORS_RP[cat]||'rgba(255,255,255,0.2)'}"></div></div>
+        <span class="rp-detail-amt">NT$${fmt(Math.round(v))}</span>
+      </div>`;
+    }).join('');
+
+    return `<div class="rp-row">
+      <div class="rp-row-header" onclick="toggleRpRow(${idx})">
+        <div class="rp-row-left">
+          <div class="rp-row-period">${sg.label}</div>
+          <div class="rp-row-meta">${exps.length} 筆 · 最多 ${topCat?topCat[0]:'—'}</div>
+        </div>
+        <div class="rp-row-right">
+          <div class="rp-row-amt">NT$${fmt(Math.round(amt))}</div>
+          <div class="rp-row-avg">${Math.round(pct)}% 佔比</div>
+        </div>
+      </div>
+      <div class="rp-row-bar-wrap"><div class="rp-row-bar" style="width:${pct}%"></div></div>
+      <div class="rp-row-detail" id="rpd-${idx}">${catRows}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleRpRow(idx) {
+  const el = document.getElementById('rpd-'+idx);
+  if (el) el.className = el.className.includes('open') ? 'rp-row-detail' : 'rp-row-detail open';
+}
+
+
+/* ══════════════════════════════════════
+   UPLOAD CARRIER SCREENSHOT — Claude Vision
+══════════════════════════════════════ */
+let uploadImgB64  = null;
+let uploadImgMime = 'image/jpeg';
+let parsedItems   = [];
+
+function openUploadModal() {
+  uploadImgB64 = null; parsedItems = [];
+  setUploadPhase('pick');
+  document.getElementById('upload-img-file').value = '';
+  document.getElementById('modal-upload').style.display = 'flex';
+}
+
+function closeUploadModal() {
+  document.getElementById('modal-upload').style.display = 'none';
+  uploadImgB64 = null; parsedItems = [];
+}
+
+function setUploadPhase(p) {
+  ['pick','proc','review'].forEach(x =>
+    document.getElementById('upload-phase-'+x).style.display = x===p?'block':'none'
+  );
+}
+
+function reselectUpload() {
+  uploadImgB64 = null; parsedItems = [];
+  // reset drop zone
+  document.getElementById('upload-preview-wrap').innerHTML =
+    '<div class="upload-icon">↑</div>' +
+    '<div class="upload-hint">點擊選擇截圖</div>' +
+    '<div class="upload-hint-sub">財政部電子發票 App、載具明細截圖均可</div>';
+  const dz = document.getElementById('upload-drop');
+  dz.className = 'upload-drop-zone';
+  document.getElementById('upload-analyze-btn').style.display = 'none';
+  document.getElementById('upload-reselect-btn').style.display = 'none';
+  document.getElementById('upload-img-file').value = '';
+  setUploadPhase('pick');
+}
+
+function handleUploadFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  uploadImgMime = file.type || 'image/jpeg'; // store for API call
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    uploadImgB64 = dataUrl.split(',')[1]; // base64 only
+    // show preview
+    const dz = document.getElementById('upload-drop');
+    dz.className = 'upload-drop-zone has-img';
+    document.getElementById('upload-preview-wrap').innerHTML =
+      '<img src="' + dataUrl + '" alt="preview">';
+    document.getElementById('upload-analyze-btn').style.display = 'block';
+    document.getElementById('upload-reselect-btn').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function analyzeUpload() {
+  if (!uploadImgB64) return;
+  setUploadPhase('proc');
+  document.getElementById('upload-proc-txt').textContent = 'AI 正在辨識截圖中的消費明細...';
+
+  try {
+    const today = localToday();
+    const prompt = `這是一張台灣電子發票 App 或手機載具明細的截圖。
+請仔細辨識圖中所有消費記錄，每筆包含：日期、金額（新台幣整數）、店家或消費描述。
+
+請只回傳 JSON 陣列，不要任何其他文字，格式如下：
+[
+  {"date":"YYYY-MM-DD","amt":123,"desc":"店家名稱或消費描述"},
+  ...
+]
+
+注意：
+- date 必須是 YYYY-MM-DD 格式，若圖中是民國年請轉換成西元年
+- amt 是新台幣整數，去掉逗號
+- desc 盡量保留店家原名
+- 若圖中日期不完整，今天是 ${today}，請合理推算
+- 若完全看不出是消費明細截圖，回傳空陣列 []`;
+
+    if (!anthropicApiKey || !anthropicApiKey.startsWith('sk-ant-')) {
+      throw new Error('請先在設定頁輸入 Anthropic API Key');
+    }
+
+    // detect image type from data URL
+    const imgMime = uploadImgMime || 'image/jpeg';
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': anthropicApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: imgMime, data: uploadImgB64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = data?.error?.message || JSON.stringify(data);
+      throw new Error(msg);
+    }
+
+    const raw = data.content?.[0]?.text || '[]';
+    // Extract JSON array from response
+    const jsonMatch = raw.match(/\[[\s\S]*\]/);
+    const cleaned = jsonMatch ? jsonMatch[0] : '[]';
+    let items = [];
+    try { items = JSON.parse(cleaned); } catch(e) { items = []; }
+
+    if (!Array.isArray(items)) items = [];
+
+    // validate each item
+    parsedItems = items
+      .filter(i => i.amt > 0 && i.desc)
+      .map((i,idx) => ({
+        id: idx,
+        date: i.date || today,
+        amt:  Math.round(Math.abs(i.amt)),
+        desc: String(i.desc).trim(),
+        cat:  autocat(String(i.desc)),
+        selected: true,
+      }));
+
+    renderParsedList();
+    setUploadPhase('review');
+
+  } catch(err) {
+    setUploadPhase('pick');
+    showToast('辨識失敗：' + (err.message || '請重試'));
+  }
+}
+
+function renderParsedList() {
+  const list = document.getElementById('parsed-list');
+  const sum  = document.getElementById('parsed-summary');
+  sum.textContent = `辨識到 ${parsedItems.length} 筆消費，勾選要匯入的項目`;
+
+  if (!parsedItems.length) {
+    list.innerHTML = '<p style="text-align:center;padding:24px;color:rgba(255,255,255,0.25);font-size:13px">未辨識到消費記錄，請重新選圖</p>';
+    return;
+  }
+
+  list.innerHTML = parsedItems.map(item => {
+    const d = new Date(item.date+'T00:00:00');
+    const dateStr = `${d.getMonth()+1}/${d.getDate()}`;
+    return `<div class="parsed-item ${item.selected?'':'excluded'}" id="pi-${item.id}">
+      <button class="parsed-check ${item.selected?'on':''}" onclick="toggleParsed(${item.id})">
+        ${item.selected ? '✓' : ''}
+      </button>
+      <div class="parsed-body">
+        <div class="parsed-desc">${escHtml(item.desc)}</div>
+        <div class="parsed-meta">${dateStr} · ${item.cat}</div>
+      </div>
+      <div class="parsed-amt">NT$${fmt(item.amt)}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleParsed(id) {
+  const item = parsedItems.find(i => i.id===id);
+  if (!item) return;
+  item.selected = !item.selected;
+  renderParsedList();
+}
+
+function importParsedItems() {
+  const selected = parsedItems.filter(i => i.selected);
+  if (!selected.length) { showToast('請勾選至少一筆'); return; }
+
+  // Insert oldest first so newest ends up at top
+  [...selected].reverse().forEach(item => {
+    state.expenses.unshift({
+      id:     Date.now() + Math.random(),
+      amt:    item.amt,
+      cur:    'TWD',
+      desc:   item.desc,
+      cat:    item.cat,
+      date:   item.date,
+      source: 'upload',
+    });
+    state.twd -= item.amt;
+  });
+
+  save();
+  render();
+  closeUploadModal();
+  switchTab('list');
+  showToast(`已加入 ${selected.length} 筆消費`);
+}
+
+
+/* ── API KEY ── */
+let anthropicApiKey = localStorage.getItem('anthropic_api_key') || '';
+
+function saveApiKey() {
+  const val = document.getElementById('api-key-input')?.value || '';
+  anthropicApiKey = val;
+  localStorage.setItem('anthropic_api_key', val);
+  updateApiKeyStatus();
+}
+
+function updateApiKeyStatus() {
+  const el = document.getElementById('api-key-status');
+  const inp = document.getElementById('api-key-input');
+  if (!el) return;
+  if (anthropicApiKey && anthropicApiKey.startsWith('sk-ant-')) {
+    el.textContent = '已設定 ✓';
+    el.style.color = 'rgba(150,255,150,0.7)';
+    if (inp) inp.value = anthropicApiKey;
+  } else if (anthropicApiKey) {
+    el.textContent = '格式似乎不對，應以 sk-ant- 開頭';
+    el.style.color = 'rgba(255,180,100,0.7)';
+    if (inp) inp.value = anthropicApiKey;
+  } else {
+    el.textContent = '未設定 — AI 辨識功能無法使用';
+    el.style.color = 'rgba(255,255,255,0.25)';
+  }
+}
+
+function toggleApiKeyVis() {
+  const inp = document.getElementById('api-key-input');
+  const btn = document.getElementById('api-key-vis-btn');
+  if (!inp) return;
+  if (inp.type === 'password') { inp.type = 'text'; if(btn) btn.textContent = '◉'; }
+  else                         { inp.type = 'password'; if(btn) btn.textContent = '◎'; }
+}
+
+
+/* ── CATEGORY PICKER ── */
+let selectedCat = null; // null = auto
+
+function pickCat(cat) {
+  selectedCat = cat;
+  // update UI
+  const ids = [null,'餐飲','交通','購物','觀光','住宿','娛樂','醫療','咖啡廳','超市生鮮','其他'];
+  ids.forEach(c => {
+    const id = c === null ? 'cp-auto' : 'cp-'+c;
+    const el = document.getElementById(id);
+    if (el) el.className = 'cat-pick-btn' + (c===cat?' active':'');
+  });
+  // update hint
+  const hintEl = document.getElementById('cat-hint');
+  if (hintEl) hintEl.textContent = cat ? cat : (document.getElementById('exp-desc')?.value ? autocat(document.getElementById('exp-desc').value) : '');
+}
+
+/* ── EXCHANGE RATE ── */
+function saveExchangeRate() {
+  const val = parseFloat(document.getElementById('rate-input')?.value);
+  if (!isNaN(val) && val > 0) {
+    TWD_JPY = val;
+    localStorage.setItem('exchange_rate', val);
+    const el = document.getElementById('rate-status');
+    if (el) el.textContent = `已更新：1 NT$ = ¥${val}`;
+    render();
+  }
+}
+
+function initRateInput() {
+  const inp = document.getElementById('rate-input');
+  if (inp) {
+    inp.value = TWD_JPY;
+    const el = document.getElementById('rate-status');
+    if (el) el.textContent = `目前匯率：1 NT$ = ¥${TWD_JPY}`;
+  }
 }
 
 /* ── INIT ── */
 load();
+applyMode();
 render();
+// restore custom range inputs + api key
+(function(){
+  const cf = document.getElementById('custom-from');
+  const ct = document.getElementById('custom-to');
+  if (cf && customFrom) cf.value = customFrom;
+  if (ct && customTo)   ct.value = customTo;
+  updateApiKeyStatus();
+})();
 </script>
+
+<!-- MODAL: SCAN INVOICE -->
+<div class="overlay" id="modal-scan" style="display:none" onclick="bgClose(event,'modal-scan')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">掃描電子發票</div>
+        <div class="sheet-sub" id="scan-phase-sub">對準發票左側 QR Code 自動讀取</div>
+      </div>
+      <button class="close-btn" onclick="closeScanModal()">✕</button>
+    </div>
+
+    <!-- PHASE 1: camera -->
+    <div id="scan-phase-cam">
+      <div class="scan-area">
+        <video id="scan-video" autoplay playsinline muted></video>
+        <div class="scan-overlay"><div class="scan-frame"></div></div>
+      </div>
+      <p class="scan-status" id="scan-status">正在啟動相機...</p>
+    </div>
+
+    <!-- PHASE 2: confirm & edit before saving -->
+    <div id="scan-phase-confirm" style="display:none">
+      <div class="scan-result-preview" id="scan-result-preview" style="display:block">
+        <div class="scan-result-row"><span class="scan-result-label">發票號碼</span><span class="scan-result-val" id="sr-inv">—</span></div>
+        <div class="scan-result-row"><span class="scan-result-label">日期</span><span class="scan-result-val" id="sr-date">—</span></div>
+        <div class="scan-result-row"><span class="scan-result-label">金額（含稅）NT$</span><span class="scan-result-val" id="sr-amt">—</span></div>
+        <div class="scan-result-row"><span class="scan-result-label">賣方統編</span><span class="scan-result-val" id="sr-seller">—</span></div>
+      </div>
+      <!-- editable fields -->
+      <div class="field" style="margin-top:12px; position:relative">
+        <input type="number" id="scan-amt-input" class="amt-input" placeholder="金額" inputmode="decimal"
+          style="font-size:22px!important;font-weight:700!important;text-align:center;padding:14px 16px;
+                 background:rgba(30,30,32,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:12px;
+                 width:100%;color:#fff;-webkit-text-fill-color:#fff;outline:none;-webkit-appearance:none;">
+      </div>
+      <div class="field" style="margin-top:10px; position:relative">
+        <input type="text" id="scan-desc-input" placeholder="消費描述（自動分類）"
+          oninput="updateScanCatHint()"
+          style="width:100%;padding:12px 90px 12px 14px;background:rgba(30,30,32,0.9);
+                 border:1px solid rgba(255,255,255,0.12);border-radius:12px;font-size:16px;
+                 color:#fff;-webkit-text-fill-color:#fff;outline:none;-webkit-appearance:none;">
+        <span id="scan-cat-hint" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+          font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase;
+          font-weight:600;pointer-events:none;"></span>
+      </div>
+      <button class="confirm-btn" style="margin-top:14px" onclick="confirmScanImport()">加入明細與儀表板</button>
+      <button class="confirm-btn ghost" style="margin-top:8px" onclick="resetScan()">重新掃描</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MODAL: UPLOAD CARRIER SCREENSHOT -->
+<div class="overlay" id="modal-upload" style="display:none" onclick="bgClose(event,'modal-upload')">
+  <div class="sheet" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">上傳載具截圖</div>
+        <div class="sheet-sub" id="upload-sub">AI 自動辨識每筆消費明細</div>
+      </div>
+      <button class="close-btn" onclick="closeUploadModal()">✕</button>
+    </div>
+
+    <!-- PHASE 1: pick image -->
+    <div id="upload-phase-pick">
+      <div class="upload-drop-zone" id="upload-drop" onclick="document.getElementById('upload-img-file').click()">
+        <div id="upload-preview-wrap">
+          <div class="upload-icon">↑</div>
+          <div class="upload-hint">點擊選擇截圖</div>
+          <div class="upload-hint-sub">財政部電子發票 App、載具明細截圖均可</div>
+        </div>
+      </div>
+      <button class="confirm-btn" id="upload-analyze-btn" style="display:none" onclick="analyzeUpload()">用 AI 辨識明細</button>
+      <button class="confirm-btn ghost" style="margin-top:8px;display:none" id="upload-reselect-btn" onclick="reselectUpload()">重新選圖</button>
+    </div>
+
+    <!-- PHASE 2: processing -->
+    <div id="upload-phase-proc" style="display:none">
+      <div class="upload-processing">
+        <div class="upload-spinner"></div>
+        <div class="upload-proc-txt" id="upload-proc-txt">AI 正在辨識截圖...</div>
+      </div>
+    </div>
+
+    <!-- PHASE 3: review parsed results -->
+    <div id="upload-phase-review" style="display:none">
+      <p class="parsed-summary" id="parsed-summary">辨識到 0 筆消費</p>
+      <div class="parsed-list" id="parsed-list"></div>
+      <button class="confirm-btn" onclick="importParsedItems()">加入勾選的消費</button>
+      <button class="confirm-btn ghost" style="margin-top:8px" onclick="reselectUpload()">重新辨識</button>
+    </div>
+
+  </div>
+</div>
 
 </body>
 </html>
